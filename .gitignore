@@ -1,0 +1,4 @@
+__pycache__/
+*.py[cod]
+src/__pycache__
+google_docs
