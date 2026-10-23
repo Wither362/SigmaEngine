@@ -20,7 +20,7 @@ The Developer is meant to use Scene's functions to overwrite them however they w
 
 ```py
 # Import SGE libraries to use them
-from src.scene import Scene
+from sge.scene import Scene
 
 class ExampleScene(Scene):
  # Your Code Goes Here

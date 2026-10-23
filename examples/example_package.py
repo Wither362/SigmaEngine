@@ -1,5 +1,5 @@
-from src.scene import Scene
-from src.object import Object
+from sge.scene import Scene
+from sge.object import Object
 import gint
 
 # Why is it called "FirstScene"? Because IT NEEDS TO BE LIKE THAT.

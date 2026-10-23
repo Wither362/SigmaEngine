@@ -1,6 +1,6 @@
 '''Just a test file that checks if the copied behaviour of gint works.'''
 
-import src.object as s
+import sge.object as s
 from gint import *
 
 

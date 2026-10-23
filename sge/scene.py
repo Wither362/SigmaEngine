@@ -2,8 +2,8 @@
 	Sigma Engine's main component of everything.
 '''
 
-from src.object import Object
-from src.camera import Camera
+from sge.object import Object
+from sge.camera import Camera
 from gint import dupdate
 
 class Scene:

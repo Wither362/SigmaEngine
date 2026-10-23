@@ -1,6 +1,6 @@
 '''SigmaEngine's form of displaying the scenes to the screen.'''
 
-from src.pointer import Pointer
+from sge.pointer import Pointer
 
 class Camera(Pointer):
 	'''SigmaEngine's form of displaying the scenes to the screen.'''

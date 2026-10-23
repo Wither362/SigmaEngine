@@ -4,7 +4,7 @@
 
 import sys
 import pygame
-from src.scene import Scene
+from sge.scene import Scene
 
 
 __firstFile__: str = str()

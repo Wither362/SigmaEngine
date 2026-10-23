@@ -2,7 +2,7 @@
 	A SigmaEngine component that has a graphic (optional) and a position in a Scene.
 '''
 
-from src.pointer import Pointer
+from sge.pointer import Pointer
 from gint import drect, dcircle
 
 class Object(Pointer):
