@@ -19,7 +19,7 @@ class FirstScene(Scene):
 		return super().Load()
 
 	def Update(self):
-			gint.dclear(gint.C_NONE)		
+			gint.dclear(gint.C_NONE)
 			self.big_rectangle.x += 0.1
 	
 			return super().Update()
