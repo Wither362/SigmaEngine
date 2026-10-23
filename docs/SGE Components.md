@@ -5,9 +5,10 @@ In SGE, there are `Scenes`, which may contain `Objects` and a `Camera`.
 This manual contains information about how to use these components.
 
 The current structure of SGE's components is structured like this:
-> Scene
-> > Camera
-> > Object
+> `Scene`
+> > `Camera`
+>
+> > `Object`
 
 ## Scene
 
@@ -52,14 +53,15 @@ class ExampleScene(Scene):
   return super().Load()
 ```
 
-### Scene.Update(self) -ARROW (newScene: str = None)
+### Scene.Update(self) -> (newScene: str = None)
 
 Called every frame, before drawing the screen.
 
 It's meant for checking for user input, moving objects, and for changing scenes.
 
-**Super() Params**:
-`newScene`: if it isn't `None`, SigmaEngine will SKIP DRAWING, then load the file with that name and load the corresponding Scene.
+**`super()` Params**:
+
+- `newScene`: if it isn't `None`, SigmaEngine will SKIP DRAWING, then load the file with that name and load the corresponding Scene.
 
 **Example**:
 
@@ -118,7 +120,7 @@ class ExampleScene(Scene):
 
 An `object` is a sub component of a `Scene`. It extends the `Pointer` class. It is a graphical component which will be presented to the screen if it's in the `camera`'s field of view.
 
-### Object.**init**(self, shape: int)
+### Object.`init`(self, shape: int)
 
 ### Object.shape
 
