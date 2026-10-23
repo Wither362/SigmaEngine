@@ -100,7 +100,7 @@ def dcircle(x: int, y: int, r: int, c):
 	'''
 	x, y, r = int(x), int(y), int(r)
 	c = pg_color(c)
-	pg.draw.circle(pg_screen, (x, y), )
+	pg.draw.circle(pg_screen, c, (x, y), r)
 	return
 def dtext_opt(x: int, y: int, foreground_color, background_color, horizontal_alignment, vertical_alignment, string: str, size: int = -1) -> None:
 	"""	
