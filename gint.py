@@ -57,6 +57,8 @@ def pg_color(color):
 	'''
 		Returns the color in pygame color code.
 	'''
+	if(isinstance(color, str)):
+		color = (0, 0, 0)
 	if (not isinstance(color, tuple)):
 		color = pg_convert_gint_color_to_pg_color(color)
 
@@ -84,7 +86,8 @@ def dclear(newBackgroundColor):
 	'''
 		Adds a rectangle on screen that covers the whole view with the specified color.
 	'''
-	pg_screen.fill()
+	newBackgroundColor = pg_color(newBackgroundColor)
+	pg_screen.fill(newBackgroundColor)
 	return
 def dtext(x: int, y: int, color, text: str):
 	'''
