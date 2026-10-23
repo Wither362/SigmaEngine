@@ -1,1 +1,1 @@
-'''SGE is the acronym for SigmaEngine'''
+'''SGE is the acronym for SigmaEngine. The full documentation is in the `/docs/` folder.'''

@@ -48,11 +48,20 @@ class Scene:
 			Called after drawing the objects (Update()).
 		'''
 
+	def SortObjects(self):
+		'''
+			Sorts the objects by their `zLayer`.
+		'''
+		self.objects = sorted(self.objects, key = lambda o: o.zLayer)
+
 	def Add(self, object):
 		'''
 			Adds `obj` to the list of objects to draw to the scene.
 		'''
 		self.objects.append(object)
+		self.SortObjects()
+
+	
 
 
 
