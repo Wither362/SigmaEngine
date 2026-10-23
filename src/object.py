@@ -1,10 +1,14 @@
-'''A SigmaEngine component that has a graphic (optional) and a position in a Scene.'''
+'''
+	A SigmaEngine component that has a graphic (optional) and a position in a Scene.
+'''
 
 from src.pointer import Pointer
 from gint import drect, dcircle
 
 class Object(Pointer):
-	'''A SigmaEngine component that has a graphic and a position.'''
+	'''
+		A SigmaEngine component that has a graphic and a position.
+	'''
 
 	shape: int
 	zLayer: int
@@ -13,11 +17,13 @@ class Object(Pointer):
 	borderSize: int
 
 	def __init__(self, shape: int):
-		'''Creates a new Object.\n
-		`object` needs to be one of these values:
-		- `0` = circle
-		- `1` = rectangle/square
-		- `2` = polygon.'''
+		'''
+			Creates a new Object.\n
+			`object` needs to be one of these values:
+			- `0` = circle
+			- `1` = rectangle/square
+			- `2` = polygon.
+		'''
 		super().__init__()
 		self.x = 0.0
 		self.y = 0.0
@@ -37,7 +43,7 @@ class Object(Pointer):
 		elif (not shape):
 			del(self.shape)
 
-	def draw(self):
+	def Draw(self):
 		if(not self.shape):
 			return
 		
@@ -45,3 +51,8 @@ class Object(Pointer):
 			dcircle()
 		elif (self.shape == 1):
 			drect(float(self.x - (self.width // 2)), float(self.y - (self.height // 2)), float(self.x + (self.width // 2)), float(self.y + (self.height // 2)), self.innerColor)
+
+
+
+
+

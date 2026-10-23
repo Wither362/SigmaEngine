@@ -54,7 +54,9 @@ def pg_convert_gint_color_to_pg_color(color_16bit):
 	return (red, green, blue)
 
 def pg_color(color):
-	'''Returns the color in pygame color code'''
+	'''
+		Returns the color in pygame color code.
+	'''
 	if (not isinstance(color, tuple)):
 		color = pg_convert_gint_color_to_pg_color(color)
 
@@ -67,7 +69,9 @@ def write(self, string : str):
 def close():
 	return
 def drect(x1: int, y1: int, x2: int, y2: int, c):
-	'''Draws a rect from (x1, y1) to (x2, y2)'''
+	'''
+		Draws a rect from (x1, y1) to (x2, y2), with color `c`.
+	'''
 	x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
 	c = pg_color(c)
 	
@@ -77,14 +81,20 @@ def drect(x1: int, y1: int, x2: int, y2: int, c):
 def drect_border(x1: int, y1, x2, y2, fill_color, border_width, border_color):
 	return
 def dclear(newBackgroundColor):
-	'''Adds a rectangle on screen that covers the whole view with the specified color.'''
+	'''
+		Adds a rectangle on screen that covers the whole view with the specified color.
+	'''
 	pg_screen.fill()
 	return
 def dtext(x: int, y: int, color, text: str):
-	'''Adds a simple text to the screen with position (`x`, `y`), color `color`, and string `text`.'''
+	'''
+		Adds a simple text to the screen with position (`x`, `y`), color `color`, and string `text`.
+	'''
 	return
 def dcircle(x: int, y: int, r: int, c):
-	'''Adds a circle to the screen with center position (`x`, `y`), radius `r` and color `c`.'''
+	'''
+		Adds a circle to the screen with center position (`x`, `y`), radius `r` and color `c`.
+	'''
 	x, y, r = int(x), int(y), int(r)
 	c = pg_color(c)
 	pg.draw.circle(pg_screen, (x, y), )
@@ -108,7 +118,9 @@ def dtext_opt(x: int, y: int, foreground_color, background_color, horizontal_ali
 def dsize(str, font = None, w = None, h = None):
 	return
 def dupdate():
-	'''Updates the screen.'''
+	'''
+		Updates the screen.
+	'''
 	pg.display.flip()
 	PG_CLOCK.tick(60)
 	return
@@ -120,5 +132,3 @@ def keycode_digit(keycode: int):
 
 def pollevent():
 	return
-
-

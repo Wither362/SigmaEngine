@@ -1,39 +1,62 @@
-'''Sigma Engine's main component of everything.'''
+'''
+	Sigma Engine's main component of everything.
+'''
 
 from src.object import Object
 from src.camera import Camera
 from gint import dupdate
 
 class Scene:
-	'''Sigma Engine's main component of everything.'''
+	'''
+		Sigma Engine's main component of everything.
+	'''
 
 	objects: list[Object]
 	'''objects which will be represented on screen'''
 	camera: Camera
 
 	def __init__(self):
-		'''Creates a new Scene Object. This is NEEDED in the first scene.
-		After that... Not really.'''
+		'''
+			Creates a new Scene.
+		'''
 		self.objects = []
 
-	def load(self):
-		'''Called on Scene Load.'''
+	def Load(self):
+		'''
+			Called when this scene loads.
+		'''
 
-	def draw(self):
-		'''Draws the objects on screen.'''
+	def Draw(self):
+		'''
+			Draws the objects on screen.
+		'''
 
 		if (len(self.objects) >= 0):
 			for obj in self.objects:
-				obj.draw()
+				obj.Draw()
 		dupdate()
 
-	def update(self):
-		'''Updates this Scene and draws the objects. Called every frame.'''
-		self.draw()
+	def Update(self, newScene: str = None):
+		'''
+			Called every frame before drawing the objects.
+		'''
+		self.Draw()
+		return newScene
 
-	def afterUpdate(self):
-		'''Called after update().'''
+	def AfterUpdate(self):
+		'''
+			Called after drawing the objects (Update()).
+		'''
 
-	def add(self, object):
-		'''Adds `obj` to the list of objects to draw to the scene.'''
+	def Add(self, object):
+		'''
+			Adds `obj` to the list of objects to draw to the scene.
+		'''
 		self.objects.append(object)
+
+
+
+
+
+
+

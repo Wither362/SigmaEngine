@@ -1,5 +1,5 @@
 '''
-main.py. The main execution of the SigmaEngine. It's composed of an uncaught exception handler, a loader, and a starter.
+	main.py. The main execution of the SigmaEngine. It's composed of an uncaught exception handler, a loader, and a starter.
 '''
 
 import sys
@@ -10,15 +10,15 @@ from src.scene import Scene
 __firstFile__: str = str()
 '''
 	The NAME of the first FILE that will load up.
-	Defined in scenes/first_file.txt.
+	Defined in `scenes/first_file.txt`.
 '''
 
 # do NOT CONFUSE THESE TWO. THEY ARE COMPLETELY DIFFERENT, but related.
 
 __firstScene__: Scene = None
 '''
-	The ACTUAL first scene that will load up. (THIS is a SCENE OBJECT)
-	Defined as FirstScene in the file which name is inside scenes/first_file.txt.
+	The ACTUAL first SCENE that will load up. (THIS is a SCENE OBJECT)
+	Defined as `FirstScene` in the file whose name is inside `scenes/first_file.txt`.
 '''
 
 
@@ -32,33 +32,37 @@ ns = {}
 pressed_AC: bool = False
 
 
-def mainExecution():
+def MainExecution():
 	'''
 		Contains the load of the first scenes,
 		and the execution of the infinite and well-known "update" functions…
-		Called in UncaughtExceptionHandler()
+		Called in `UncaughtExceptionHandler()`.
 	'''
 	print("loading up.")
 	# load the scene.
 	s: Scene = __firstScene__()
-	s.load()
+	s.Load()
 
 	# update indefinitely the scene.
 	while True:
+		# check whether the dev wants to close the Pygame loop
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
 				sys.exit()
 
-		# check in case of the user wanting to close the Pygame loop
-		s.update()
-		s.afterUpdate()
+		# `Scene.Update()` can return a str value that represents whether the scene wants to change to another Scene or not. So, we check if that's true.
+		if (s.Update()):
+			# It wants to change scenes.
+			s
+
+		s.AfterUpdate()
 
 
-def uncaughtExceptionHandler():
+def UncaughtExceptionHandler():
 	'''
-		Simple yet effective uncaught Exception Handler.
-		In case of the user presses the AC key without knowing or inconsciouslly.
+		Simple yet effective Uncaught Exception Handler.
+		In case of the user presses the AC key without knowing or unconsciously.
 		Or, if SigmaEngine doesn't work at ALL.
 	'''
 	try:
@@ -70,25 +74,25 @@ def uncaughtExceptionHandler():
 		# Load the file. LOAD IT UUUPPP
 		exec(open(__firstFile__).read(), ns)
 
-		# The first scene is ALWAYS CALLED FirstScene.
+		# The first scene is ALWAYS CALLED `FirstScene`.
 		__firstScene__ = ns['FirstScene']
 
 		# Now... it's time to shine.
-		mainExecution()
+		MainExecution()
 	except Exception as e:
 		global pressed_AC
 		print('ERR: ' + str(e))
-		if (pressed_AC): # if the user doesn't want to, we don't.
+		if (pressed_AC): # if the User/Player wants to exit, we exit.
 			return
 		
 		# This system does it so the user has to press 3 times the AC button for SigmaEngine to exit.
 		pressed_AC = True
 		
-		uncaughtExceptionHandler() # Just get it on and try again, dumb.
+		UncaughtExceptionHandler() # Just get it on and try again, dumb.
 
 
-def startEngine():
-	# okay. Let's try to know what file is the first one (we already know that the first scene is called FirstScene, duh.).
+def StartEngine():
+	# okay. Let's try to know what file is the first one (we already know that the first scene is called `FirstScene`, duh.).
 	try:
 		with open('scenes/first_file.txt', 'r', encoding='utf-8') as f:
 			global __firstFile__
@@ -100,12 +104,15 @@ def startEngine():
 		print("ERROR: Could NOT load the first scene!: " + str(e))
 		return False
 
+
 # Load it up!
-if (startEngine()):
+if (StartEngine()):
 	print('INFO: Loading SigmaEngine...')
-	uncaughtExceptionHandler()
+	UncaughtExceptionHandler()
 else:
 	print('FATAL ERROR: Could NOT load the first scene AT ALL.')
 	print('SigmaEngine needs to be executed again to work!')
+
+
 
 
