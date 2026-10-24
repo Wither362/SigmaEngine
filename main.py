@@ -4,7 +4,6 @@
 
 import sys
 import time
-import pygame
 from sge.scene import Scene
 
 
@@ -45,32 +44,12 @@ def MainExecution():
 	s.Load()
 
 	# short for "last time"
-	lt: float = float()
+	lt: float = None
 	now: float = float()
-
-
-	# this is SUCH A MESS OF A CODE, but it's meant to be COMPATIBLE BETWEEN PYTHON AND MICROPYTHON
-	if hasattr(time, 'perf_counter'): # python
-		def _now(): return time.perf_counter()
-		def _diff(a, b): return (b - a) * 1000
-	else: # micropython
-		def _now(): return time.ticks_ms()
-		def _diff(a, b): return time.ticks_diff(b, a)
-
-
 
 	# update indefinitely the scene.
 	while True:
-		# check whether the dev wants to close the Pygame loop
-		# THIS IS MEANT TO BE DELETED WHEN TRANSFERING TO MMICROPYTHON.
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.quit()
-				sys.exit()
-
-		# DONT DELETE THE REST
-
-		now = _now() # change this for time.ticks_ms() for micropython
+		now = time.ticks_ms()
 
 		# send `dt` as deltaTime as the difference between this and last frame, and divided by 1000 because it's in seconds and not in miliseconds.
 		if (s.Update(dt = (now - (lt if lt else now)) / 1000)):
@@ -79,7 +58,7 @@ def MainExecution():
 			s
 
 		s.AfterUpdate()
-		lt = _now()
+		lt = time.ticks_ms()
 
 
 def UncaughtExceptionHandler():
