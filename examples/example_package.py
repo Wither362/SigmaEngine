@@ -24,7 +24,6 @@ class FirstScene(Scene):
 	def Update(self, dt: float):
 			gint.dclear(gint.C_NONE)
 			self.big_rectangle.x += dt * 1000000
-			print(self.big_rectangle.x)
 	
 			return super().Update() # we could return 'newScene = 'nasdaisdais'' if we wanted to change scenes.
 
