@@ -73,7 +73,7 @@ def MainExecution():
 		now = _now() # change this for time.ticks_ms() for micropython
 
 		# send `dt` as deltaTime as the difference between this and last frame, and divided by 1000 because it's in seconds and not in miliseconds.
-		if (s.Update(dt = (now - lt) / 1000)):
+		if (s.Update(dt = (now - (lt if lt else now)) / 1000)):
 			# `Scene.Update()` can return a str value that represents whether the scene wants to change to another Scene or not. So, we check if that's true.
 			# so it wants to change, since we are in this upper side of the conditional if.
 			s
