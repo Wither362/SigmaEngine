@@ -43,6 +43,17 @@ class Object(Pointer):
 		elif (not shape):
 			del(self.shape)
 
+	def Rectangle(self, x, y, width, height, color):
+		'''
+			Sets the shape of tis object as a rectangle and sets its attributes.
+			It's a great way to not forget want attributes you have to specify in order for SGE to work properly.
+		'''
+		self.shape = 1
+		self.x, self.y = x, y
+		self.width, self.height = width, height
+		self.innerColor = color
+		return self
+
 	def Draw(self):
 		if(not self.shape):
 			return

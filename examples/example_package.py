@@ -12,8 +12,11 @@ class FirstScene(Scene):
 		'''
 
 		self.big_rectangle = Object(1) # Create a rectangle
-		self.big_rectangle.x, self.big_rectangle.y, self.big_rectangle.width, self.big_rectangle.height = 50, 50, 70, 70 # Adjust position and size
-		self.big_rectangle.innerColor = gint.C_BLUE # Adjust color
+		# The short way to setting all the variables is this one:
+		self.big_rectangle.Rectangle(50, 50, 70, 70, gint.C_BLUE)
+		# if not, you would have to do this:
+		# self.big_rectangle.x, self.big_rectangle.y, self.big_rectangle.width, self.big_rectangle.height = 50, 50, 70, 70 # Adjust position and size
+		# self.big_rectangle.innerColor = gint.C_BLUE # Adjust color
 		self.Add(self.big_rectangle) # Add to this scene.
 		
 		return super().Load()
