@@ -4,6 +4,7 @@
 
 import sys
 import time
+from uio import StringIO
 from sge.scene import Scene
 
 
@@ -31,6 +32,11 @@ ns = {}
 
 pressed_AC: bool = False
 
+
+def ExceptionPrinter(e):
+	s = StringIO()
+	sys.print_exception(e, s)
+	print(str(s.getvalue()))
 
 def MainExecution():
 	'''
@@ -83,7 +89,11 @@ def UncaughtExceptionHandler():
 		MainExecution()
 	except Exception as e:
 		global pressed_AC
+
+		print('---UNCAUGHT EXCEPTION HANDLER ERROR---')
 		print('ERR: ' + str(e))
+		ExceptionPrinter(e)
+
 		if (pressed_AC): # if the User/Player wants to exit, we exit.
 			return
 		
@@ -96,14 +106,16 @@ def UncaughtExceptionHandler():
 def StartEngine():
 	# okay. Let's try to know what file is the first one (we already know that the first scene is called `FirstScene`, duh.).
 	try:
-		with open('scenes/first_file.txt', 'r', encoding='utf-8') as f:
+		with open("sigmaengine\scenes\first.py") as f:
 			global __firstFile__
 			__firstFile__ = f.read().strip()
 			f.close()
 
 		return True
 	except Exception as e:
-		print("ERROR: Could NOT load the first scene!: " + str(e))
+		print('---START ERROR---')
+		print("ERROR: " + str(e))
+		ExceptionPrinter(e)
 		return False
 
 
@@ -112,8 +124,9 @@ if (StartEngine()):
 	print('INFO: Loading SigmaEngine...')
 	UncaughtExceptionHandler()
 else:
-	print('FATAL ERROR: Could NOT load the first scene AT ALL.')
+	print('---FATAL ERROR---')
 	print('SigmaEngine needs to be executed again to work!')
+	print('------------------')
 
 
 
