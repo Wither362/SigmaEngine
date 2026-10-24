@@ -18,9 +18,9 @@ class FirstScene(Scene):
 		
 		return super().Load()
 
-	def Update(self):
+	def Update(self, dt: float):
 			gint.dclear(gint.C_NONE)
-			self.big_rectangle.x += 0.1
+			self.big_rectangle.x += dt * 10
 	
-			return super().Update()
+			return super().Update() # we could return 'newScene = 'nasdaisdais'' if we wanted to change scenes.
 

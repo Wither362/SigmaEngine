@@ -53,15 +53,19 @@ class ExampleScene(Scene):
   return super().Load()
 ```
 
-### Scene.Update(self) -> (newScene: str = None)
+### Scene.Update(self, dt: float) -> (newScene: str = None)
 
-Called every frame, before drawing the screen.
+Called every frame, **before** drawing the screen.
 
 It's meant for checking for user input, moving objects, and for changing scenes.
 
 **`super()` Params**:
 
 - `newScene`: if it isn't `None`, SigmaEngine will SKIP DRAWING, then load the file with that name and load the corresponding Scene.
+
+**Overwriten Params**:
+
+- `dt`: the delta time in seconds, which is the time that has passed between this and the last call of Update().
 
 **Example**:
 

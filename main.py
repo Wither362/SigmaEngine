@@ -3,6 +3,7 @@
 '''
 
 import sys
+import time
 import pygame
 from sge.scene import Scene
 
@@ -43,20 +44,42 @@ def MainExecution():
 	s: Scene = __firstScene__()
 	s.Load()
 
+	# short for "last time"
+	lt: float = float()
+	now: float = float()
+
+
+	# this is SUCH A MESS OF A CODE, but it's meant to be COMPATIBLE BETWEEN PYTHON AND MICROPYTHON
+	if hasattr(time, 'perf_counter'): # python
+		def _now(): return time.perf_counter()
+		def _diff(a, b): return (b - a) * 1000
+	else: # micropython
+		def _now(): return time.ticks_ms()
+		def _diff(a, b): return time.ticks_diff(b, a)
+
+
+
 	# update indefinitely the scene.
 	while True:
 		# check whether the dev wants to close the Pygame loop
+		# THIS IS MEANT TO BE DELETED WHEN TRANSFERING TO MMICROPYTHON.
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
 				sys.exit()
 
-		# `Scene.Update()` can return a str value that represents whether the scene wants to change to another Scene or not. So, we check if that's true.
-		if (s.Update()):
-			# It wants to change scenes.
+		# DONT DELETE THE REST
+
+		now = _now() # change this for time.ticks_ms() for micropython
+
+		# send `dt` as deltaTime as the difference between this and last frame, and divided by 1000 because it's in seconds and not in miliseconds.
+		if (s.Update(dt = (now - lt) / 1000)):
+			# `Scene.Update()` can return a str value that represents whether the scene wants to change to another Scene or not. So, we check if that's true.
+			# so it wants to change, since we are in this upper side of the conditional if.
 			s
 
 		s.AfterUpdate()
+		lt = _now()
 
 
 def UncaughtExceptionHandler():

@@ -38,7 +38,33 @@ class Scene:
 
 	def Update(self, newScene: str = None):
 		'''
-			Called every frame before drawing the objects.
+			Called every frame **before** drawing the objects to the screen.
+
+			**`super()` Params**:
+			- `newScene`: if not `None`, SGE will automatically change the scene to this str.
+
+			**Overwrite Params**:
+			- `dt`: the delta time / how many seconds have passed since the last call to Update().
+
+			**Example**:
+			```py
+			class ExampleScene(Scene):
+				# as you should now, it's important that you also add the 'self' part to the function.
+				def Update(self, dt):
+					global change_scene, is_user_lagging
+					change_scene: bool = False
+					is_user_lagging = False
+					# maybe check user input
+					if (user_is_inputting):
+						change_scene = True
+					if (dt > 0.1):
+						is_user_lagging = True
+					
+					if (change_scene or is_user_lagging):
+						return super().Update('SuperAwesomeScene2')
+					else: # this 'else' could be deleted ngl
+						return super().Update() # don't tell NOTHING.
+			```
 		'''
 		self.Draw()
 		return newScene
