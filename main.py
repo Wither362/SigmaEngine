@@ -44,27 +44,33 @@ def MainExecution():
 		and the execution of the infinite and well-known "update" functions…
 		Called in `UncaughtExceptionHandler()`.
 	'''
-	print("loading up.")
-	# load the scene.
-	s: Scene = __firstScene__()
-	s.Load()
+	try:
+		print("loading up.")
+		# load the scene.
+		s: Scene = __firstScene__()
+		s.Load()
 
-	# short for "last time"
-	lt: float = None
-	now: float = float()
+		# short for "last time"
+		lt: float = -1.0
+		now: float = float()
 
-	# update indefinitely the scene.
-	while True:
-		now = time.ticks_ms()
+		# update indefinitely the scene.
+		while True:
+			now = time.ticks_ms()
+			
+			# send `dt` as deltaTime as the difference between this and last frame, and divided by 1000 because it's in seconds and not in miliseconds.
+			#if (
+			s.Update(dt = (now - (lt if lt != -1.0 else now)) / 1000)
+			print("dt: " + str((now - (lt if lt != -1.0 else now)) / 1000))
+			# ):
+				# `Scene.Update()` can return a str value that represents whether the scene wants to change to another Scene or not. So, we check if that's true.
+				# so it wants to change, since we are in this upper side of the conditional if.
+			#s
 
-		# send `dt` as deltaTime as the difference between this and last frame, and divided by 1000 because it's in seconds and not in miliseconds.
-		if (s.Update(dt = (now - (lt if lt else now)) / 1000)):
-			# `Scene.Update()` can return a str value that represents whether the scene wants to change to another Scene or not. So, we check if that's true.
-			# so it wants to change, since we are in this upper side of the conditional if.
-			s
-
-		s.AfterUpdate()
-		lt = time.ticks_ms()
+			s.AfterUpdate()
+			lt = now
+	except Exception as e:
+		raise e
 
 
 def UncaughtExceptionHandler():
@@ -77,7 +83,7 @@ def UncaughtExceptionHandler():
 		global ns, __firstScene__
 		ns = {} # reset ns in case of it not being absolutely destroyed earlier.
 
-		sys.path.insert(0, 'src')
+		sys.path.insert(0, 'sigma')
 
 		# Load the file. LOAD IT UUUPPP
 		exec(open(__firstFile__).read(), ns)
@@ -106,7 +112,7 @@ def UncaughtExceptionHandler():
 def StartEngine():
 	# okay. Let's try to know what file is the first one (we already know that the first scene is called `FirstScene`, duh.).
 	try:
-		with open("sigmaengine\scenes\first.py") as f:
+		with open("sigma/scenes/first.py") as f:
 			global __firstFile__
 			__firstFile__ = f.read().strip()
 			f.close()

@@ -1,1 +1,1 @@
-sigmaengine\examples\example_package.py
+sigma\examples\example_package.py
