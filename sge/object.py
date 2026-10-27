@@ -61,7 +61,8 @@ class Object(Pointer):
 		if (self.shape == 0):
 			dcircle()
 		elif (self.shape == 1):
-			drect(float(self.x - (self.width // 2)), float(self.y - (self.height // 2)), float(self.x + (self.width // 2)), float(self.y + (self.height // 2)), self.innerColor)
+			drect(int(self.x) - (self.width // 2), int(self.y) - (self.height // 2), int(self.x) + (self.width // 2), int(self.y) + (self.height // 2), self.innerColor)
+			# maybe drect(int(self.x) - (self.width // 2), int(self.y) - (self.height // 2), int(self.x) + (self.width // 2), int(self.y) + (self.height // 2), self.innerColor) is more efficient? I'll have to find out.
 
 
 

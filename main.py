@@ -2,9 +2,15 @@
 	main.py. The main execution of the SigmaEngine. It's composed of an uncaught exception handler, a loader, and a starter.
 '''
 
+# Dependencies for Python 3.13 and all that
+import pygame
+
+# Micropython dependencies
+from uio import StringIO
+
+# Normal dependencies required on both sides
 import sys
 import time
-import pygame
 from sge.scene import Scene
 
 
@@ -32,54 +38,53 @@ ns = {}
 
 pressed_AC: bool = False
 
+# Micropython code
+def ExceptionPrinter(e):
+	s = StringIO()
+	sys.print_exception(e, s)
+	print(str(s.getvalue()))
+
 
 def MainExecution():
 	'''
 		Contains the load of the first scenes,
-		and the execution of the infinite and well-known "update" functions…
+		and the execution of the infinite and well-known "update" functions.
 		Called in `UncaughtExceptionHandler()`.
 	'''
-	print("loading up.")
-	# load the scene.
-	s: Scene = __firstScene__()
-	s.Load()
+	try:
+		# load the scene.
+		s: Scene = __firstScene__()
+		s.Load()
 
-	# short for "last time"
-	lt: float = float()
-	now: float = float()
+		# short for "last time"
+		lt: float = -1.0
+		now: float = float()
+	 
+		# UPDATE indefinitely the scene. (This is the MAIN LOOP)
+		while True:
+			# check whether the dev wants to close the Pygame loop
+			# THIS IS MEANT TO BE DELETED WHEN TRANSFERING TO MMICROPYTHON.
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					pygame.quit()
+					sys.exit()
 
 
-	# this is SUCH A MESS OF A CODE, but it's meant to be COMPATIBLE BETWEEN PYTHON AND MICROPYTHON
-	if hasattr(time, 'perf_counter'): # python
-		def _now(): return time.perf_counter()
-		def _diff(a, b): return (b - a) * 1000
-	else: # micropython
-		def _now(): return time.ticks_ms()
-		def _diff(a, b): return time.ticks_diff(b, a)
+			# DONT DELETE THE REST
 
+			now = time.ticks_ms() # change this for time.ticks_ms() for micropython
 
+			# send `dt` as deltaTime as the difference between this and last frame, and divided by 1000 because it's in seconds and not in miliseconds.
+			if (s.Update(dt = (now - (lt if lt != -1.0 else now)) / 1000)):
+				# `Scene.Update()` can return a str value that represents whether the scene wants to change to another Scene or not. So, we check if that's true.
+				# so it wants to change, since we are in this upper side of the conditional if.
+				s
 
-	# update indefinitely the scene.
-	while True:
-		# check whether the dev wants to close the Pygame loop
-		# THIS IS MEANT TO BE DELETED WHEN TRANSFERING TO MMICROPYTHON.
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.quit()
-				sys.exit()
-
-		# DONT DELETE THE REST
-
-		now = _now() # change this for time.ticks_ms() for micropython
-
-		# send `dt` as deltaTime as the difference between this and last frame, and divided by 1000 because it's in seconds and not in miliseconds.
-		if (s.Update(dt = (now - (lt if lt else now)) / 1000)):
-			# `Scene.Update()` can return a str value that represents whether the scene wants to change to another Scene or not. So, we check if that's true.
-			# so it wants to change, since we are in this upper side of the conditional if.
-			s
-
-		s.AfterUpdate()
-		lt = _now()
+			s.AfterUpdate()
+			lt = time.ticks_ms()
+	except Exception as e:
+		# Return the error to the UncaughtExceptionHandler cause he's a very good boy
+		raise e
 
 
 def UncaughtExceptionHandler():
@@ -92,7 +97,7 @@ def UncaughtExceptionHandler():
 		global ns, __firstScene__
 		ns = {} # reset ns in case of it not being absolutely destroyed earlier.
 
-		sys.path.insert(0, 'src')
+		sys.path.insert(0, 'sigma')
 
 		# Load the file. LOAD IT UUUPPP
 		exec(open(__firstFile__).read(), ns)
@@ -102,14 +107,21 @@ def UncaughtExceptionHandler():
 
 		# Now... it's time to shine.
 		MainExecution()
-	except Exception as e:
+
+	except KeyboardInterrupt as e: # the player pressed the AC button
 		global pressed_AC
-		print('ERR: ' + str(e))
+
 		if (pressed_AC): # if the User/Player wants to exit, we exit.
 			return
-		
-		# This system does it so the user has to press 3 times the AC button for SigmaEngine to exit.
+
 		pressed_AC = True
+
+		UncaughtExceptionHandler() # Just get it on and try again, dumb.
+
+	except Exception as e:
+		print('---UNCAUGHT EXCEPTION HANDLER ERROR---')
+		print('ERR: ' + str(e))
+		ExceptionPrinter(e)
 		
 		UncaughtExceptionHandler() # Just get it on and try again, dumb.
 
@@ -117,7 +129,7 @@ def UncaughtExceptionHandler():
 def StartEngine():
 	# okay. Let's try to know what file is the first one (we already know that the first scene is called `FirstScene`, duh.).
 	try:
-		with open('scenes/first_file.txt', 'r', encoding='utf-8') as f:
+		with open('sigma/scenes/first.py') as f:
 			global __firstFile__
 			__firstFile__ = f.read().strip()
 			f.close()
@@ -133,9 +145,8 @@ if (StartEngine()):
 	print('INFO: Loading SigmaEngine...')
 	UncaughtExceptionHandler()
 else:
-	print('FATAL ERROR: Could NOT load the first scene AT ALL.')
+	print('---FATAL ERROR---')
 	print('SigmaEngine needs to be executed again to work!')
-
-
+	print('------------------')
 
 

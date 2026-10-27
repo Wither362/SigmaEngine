@@ -40,12 +40,12 @@ class Scene:
 		'''
 			Called every frame **before** drawing the objects to the screen.
 
+			**Overwrite Params**:
+						- `dt`: the delta time / how many seconds have passed since the last call to Update().
+			
 			**`super()` Params**:
 			- `newScene`: if not `None`, SGE will automatically change the scene to this str.
-
-			**Overwrite Params**:
-			- `dt`: the delta time / how many seconds have passed since the last call to Update().
-
+			
 			**Example**:
 			```py
 			class ExampleScene(Scene):
@@ -61,6 +61,7 @@ class Scene:
 						is_user_lagging = True
 					
 					if (change_scene or is_user_lagging):
+						# Return a super cool and awesome str to make SigmaEngine change scenes.
 						return super().Update('SuperAwesomeScene2')
 					else: # this 'else' could be deleted ngl
 						return super().Update() # don't tell NOTHING.

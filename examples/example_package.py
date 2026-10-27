@@ -23,7 +23,10 @@ class FirstScene(Scene):
 
 	def Update(self, dt: float):
 			gint.dclear(gint.C_NONE)
-			self.big_rectangle.x += dt * 1000000
+			# Take in count: ONE single object makes it so dt is around 0.016 and 0.043 seconds.
+			self.big_rectangle.x += dt * 1000
 	
 			return super().Update() # we could return 'newScene = 'nasdaisdais'' if we wanted to change scenes.
 
+	def AfterUpdate(self):
+		return super().AfterUpdate()
