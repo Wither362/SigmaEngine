@@ -2,22 +2,26 @@
 	main.py. The main execution of the SigmaEngine. It's composed of an uncaught exception handler, a loader, and a starter.
 '''
 
-# Dependencies for Python 3.13 and all that
-import pygame
-
-# Micropython dependencies
-from uio import StringIO
-
 # Normal dependencies required on both sides
 import sys
-import time
 from sge.scene import Scene
+from io import StringIO
+
+# Micropython dependencies
+if sys.platform != 'win32':
+	import time
+
+# Dependencies for Python 3.13 and all that. Delete this if in micropython.
+if sys.platform == 'win32':
+	import pygame
+	from win32.win32_file_system import open
+	import win32.win32_time as time
 
 
-__firstFile__: str = str()
+__firstFile__: str = ''
 '''
 	The NAME of the first FILE that will load up.
-	Defined in `scenes/first_file.txt`.
+	Defined in `scenes/first.py`.
 '''
 
 # do NOT CONFUSE THESE TWO. THEY ARE COMPLETELY DIFFERENT, but related.
@@ -40,9 +44,13 @@ pressed_AC: bool = False
 
 # Micropython code
 def ExceptionPrinter(e):
-	s = StringIO()
-	sys.print_exception(e, s)
-	print(str(s.getvalue()))
+	if(sys.platform != 'win32'): # Delete this 'if' if you are doing this in micropython, BUT NOT THE CODE BELOw.
+		s = StringIO()
+		sys.print_exception(e, s)
+		print(str(s.getvalue()))
+		del(s)
+	else:
+		print('ERR: ' + str(e))
 
 
 def MainExecution():
@@ -72,16 +80,18 @@ def MainExecution():
 
 			# DONT DELETE THE REST
 
-			now = time.ticks_ms() # change this for time.ticks_ms() for micropython
+			now = time.ticks_ms()
 
-			# send `dt` as deltaTime as the difference between this and last frame, and divided by 1000 because it's in seconds and not in miliseconds.
-			if (s.Update(dt = (now - (lt if lt != -1.0 else now)) / 1000)):
+			# send `dt` as deltaTime. You should already now what is deltatime.
+			if (s.Update(dt = (time.ticks_diff(now, lt if lt != -1.0 else now) / 1000.0))):
 				# `Scene.Update()` can return a str value that represents whether the scene wants to change to another Scene or not. So, we check if that's true.
 				# so it wants to change, since we are in this upper side of the conditional if.
 				s
 
 			s.AfterUpdate()
-			lt = time.ticks_ms()
+
+			lt = now
+
 	except Exception as e:
 		# Return the error to the UncaughtExceptionHandler cause he's a very good boy
 		raise e
@@ -96,8 +106,6 @@ def UncaughtExceptionHandler():
 	try:
 		global ns, __firstScene__
 		ns = {} # reset ns in case of it not being absolutely destroyed earlier.
-
-		sys.path.insert(0, 'sigma')
 
 		# Load the file. LOAD IT UUUPPP
 		exec(open(__firstFile__).read(), ns)
@@ -118,9 +126,8 @@ def UncaughtExceptionHandler():
 
 		UncaughtExceptionHandler() # Just get it on and try again, dumb.
 
-	except Exception as e:
+	except Exception as e: # All the other exceptions
 		print('---UNCAUGHT EXCEPTION HANDLER ERROR---')
-		print('ERR: ' + str(e))
 		ExceptionPrinter(e)
 		
 		UncaughtExceptionHandler() # Just get it on and try again, dumb.

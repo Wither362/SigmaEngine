@@ -1,1 +1,1 @@
-sigma/examples/example_package.py
+sigma/scenes/example.py
