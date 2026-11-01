@@ -17,7 +17,7 @@ class FirstScene(Scene):
 		self.rectangles: list[obj.Object] = []
 		self.rectanglesD: list[list[int]] = []
 
-		for i in range(r.randint(3, 8)):
+		for _ in range(r.randint(3, 8)):
 			rect = Object(1) # Create a rectangle
 			# The short way to setting all the variables is this one:
 			rect = Rectangle(rect, 50 * r.uniform(0.3, 2), 50 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), gint.C_RGB(r.randint(10, 31), r.randint(10, 31), r.randint(10, 31)), zL = 1) # you may delete the zL parameter if you don't care about layers and just want it to work.
@@ -38,7 +38,7 @@ class FirstScene(Scene):
 		self.Add(self.circle)
 
 		self.circle2 = Object(0)
-		self.circle2 = Circle(self.circle2, gint.DWIDTH - 20, 170, 17.5, gint.C_RGB(14, 5, 13), gint.C_RGB(9, 4, 8))
+		self.circle2 = Circle(self.circle2, gint.DWIDTH - 20, 170, 17.5, gint.C_RGB(14, 5, 13), gint.C_RGB(9, 4, 8), zL = 3)
 		self.Add(self.circle2)
 
 		self.t = 0
@@ -69,10 +69,10 @@ class FirstScene(Scene):
 		self.circle.r = 35 * abs(math.cos(self.t * 150))
 
 		if (self.circle.r <= 17.5):
-			if (self.circle.zL != 1): # only execute SortObjects ONCE, NOT EVERY FRAME
-				self.circle.zL = 3
+			if (self.circle.zL != 4): # only execute SortObjects ONCE, NOT EVERY FRAME
+				self.circle.zL = 4
 				self.SortObjects()
-		elif (self.circle.zL != -1):
+		elif (self.circle.zL != 2):
 			self.circle.zL = 2
 			self.SortObjects()
 
@@ -89,7 +89,7 @@ class FirstScene(Scene):
 		elif (self.circle.y + max(self.circle.r, self.circle2.r) > gint.DHEIGHT and self.cYD == 1):
 			self.cYD = -1
 
-		return super().Update(dt = dt) # we could return 'newScene = 'nasdaisdais'' if we wanted to change scenes.
+		return super().Update(dt = dt) # we could return sMN = 'scene2_file' and sN = 'Scene2' if we wanted to change the scene to Scene2 which is supposely inside scene2.py.
 
 	def AfterUpdate(self):
 		return super().AfterUpdate()

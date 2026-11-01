@@ -5,7 +5,7 @@
 from sge.math import truncate
 from sge.object import Object
 from sge.camera import Camera
-from gint import dclear, dupdate, dtext, C_WHITE, C_BLACK
+from gint import dupdate, dtext, C_WHITE
 
 class Scene:
 	'''
@@ -44,7 +44,7 @@ class Scene:
 			dtext(0, 0, C_WHITE, "FPS " + str(truncate(1 / dt, 1)))
 		dupdate()
 
-	def Update(self, newScene: str = None, dt: float = -1):
+	def Update(self, sMN: str = None, sN: str = None, dt: float = -1):
 		'''
 			Called every frame **before** drawing the objects to the screen.
 			This DOES NOT CALL 'gint.dclear'.
@@ -52,9 +52,10 @@ class Scene:
 			**Overwrite Params**:
 			- `dt`: the delta time / how many seconds have passed since the last call to Update().
 			
-			**`super()` Params**:
-			- `newScene`: if not `None`, SGE will automatically change the scene to this str.
-			
+			**`super()` Params** in case you want to change scenes:
+			- `sMN`: shorter for `Scene Module Name`, which is the `filename` of the file where the new scene is in.
+			- `sN`: shorter for `Scene Name`, which is the name of the `scene class` you want to change to.
+
 			**Example**:
 			```py
 			class ExampleScene(Scene):
@@ -71,13 +72,14 @@ class Scene:
 					
 			    if (change_scene or is_user_lagging):
 			      # Return a super cool and awesome str to make SigmaEngine change scenes.
-			      return super().Update('SuperAwesomeScene2')
+				  # the **class** `SuperAwesomeScene` is inside the file `super_awesome.py`
+			      return super().Update(sMN = 'super_awesome', sN = 'SuperAwesomeScene')
 			    else: # this 'else' could be deleted ngl
 			      return super().Update() # don't tell NOTHING.
 			```
 		'''
 		self.Draw(dt)
-		return newScene
+		return sMN, sN
 
 	def AfterUpdate(self):
 		'''

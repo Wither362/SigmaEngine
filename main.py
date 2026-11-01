@@ -18,29 +18,15 @@ if (sys.platform == 'linux' or sys.platform == 'darwin' or sys.platform == 'win3
 	import desktop.desktop_py_events as pyevents
 
 
-__firstFile__: str = ''
+__firstModule__: str = ''
 '''
-	The NAME of the first FILE that will load up.
+	The NAME of the first MODULE (so it needs to be in a format like `scene`, or `folderInsideScenes.scene`) that will load up.
 	Defined in `scenes/first.py`.
 '''
 
-# do NOT CONFUSE THESE TWO. THEY ARE COMPLETELY DIFFERENT, but related.
-
-__firstScene__: Scene = None
-'''
-	The ACTUAL first SCENE that will load up. (THIS is a SCENE OBJECT)
-	Defined as `FirstScene` in the file whose name is inside `scenes/first_file.txt`.
-'''
-
-
-# Shorter for "namespace"
-ns = {}
-'''
-	Encapsulator for being able to open a file and blah blah blah.
-	I know what I got!
-'''
 
 pressed_AC: bool = False
+
 
 # Micropython code
 def ExceptionPrinter(e):
@@ -57,15 +43,23 @@ def ExceptionPrinter(e):
 	# stop deleting.
 
 
-def MainExecution():
+def ChangeScene(sMN: str, sN: str):
 	'''
-		Contains the load of the first scenes,
-		and the execution of the infinite and well-known "update" functions.
+	`sMN` is `scene module name`, `sN` is `scene name`.\n
+	Returns the `Scene` inside the module `sMN` 
+	'''
+	return getattr(__import__('scenes.' + sMN, fromlist=[""]), sN)
+
+
+def MainExecution(fS):
+	'''
+		`fS` is shorter for `first scene`, which is `Scene` class.\n
+		Contains the load of the first scenes, and the execution of the infinite and well-known "update" functions.\n
 		Called in `UncaughtExceptionHandler()`.
 	'''
 	try:
 		# load the scene.
-		s: Scene = __firstScene__()
+		s: Scene = fS()
 		s.Load()
 
 		# short for "last time"
@@ -81,14 +75,15 @@ def MainExecution():
 			pyevents.mainExecution()
 			# DONT DELETE THE REST
 
+			# send `dt` as deltaTime. You should already now what deltatime is.
+			sMN, sN = s.Update(dt = (time.ticks_diff(now, lt if lt != -1.0 else now) / 1000.0))
+			# sMN is the shorter form of `scene module name`, and sN of `scene name`.
 
-			# send `dt` as deltaTime. You should already now what is deltatime.
-			if (s.Update(dt = (time.ticks_diff(now, lt if lt != -1.0 else now) / 1000.0))):
-				# `Scene.Update()` can return a str value that represents whether the scene wants to change to another Scene or not. So, we check if that's true.
-				# so it wants to change, since we are in this upper side of the conditional if.
-				s
-
-			s.AfterUpdate()
+			# If those two aren't `None`, then the Scene wants to change places with a new Scene.
+			if (not sMN and not sN):
+				s.AfterUpdate()
+			else: # change scene.
+				s = ChangeScene(sMN, sN)
 
 			lt = now
 
@@ -98,22 +93,13 @@ def MainExecution():
 
 def UncaughtExceptionHandler():
 	'''
-		Simple yet effective Uncaught Exception Handler.
+		Simple yet NOT-effective Uncaught Exception Handler.
 		In case of the user presses the AC key without knowing or unconsciously.
 		Or, if SigmaEngine doesn't work at ALL.
 	'''
 	try:
-		global ns, __firstScene__
-		ns = {} # reset ns in case of it not being absolutely destroyed earlier.
-
-		# Load the file. LOAD IT UUUPPP
-		exec(open(__firstFile__).read(), ns)
-
-		# The first scene is ALWAYS CALLED `FirstScene`.
-		__firstScene__ = ns['FirstScene']
-
 		# Now... it's time to shine.
-		MainExecution()
+		MainExecution(ChangeScene(__firstModule__, 'FirstScene')) # the first scene is ALWAYS CALLED FirstScene
 
 	except KeyboardInterrupt as e: # the player pressed the AC button
 		global pressed_AC
@@ -129,15 +115,15 @@ def UncaughtExceptionHandler():
 		print('---UNCAUGHT EXCEPTION HANDLER ERROR---')
 		ExceptionPrinter(e)
 		
-		UncaughtExceptionHandler() # Just get it on and try again, dumb.
+		# UncaughtExceptionHandler() # Just get it on and try again, dumb.
 
 
 def StartEngine():
 	# okay. Let's try to know what file is the first one (we already know that the first scene is called `FirstScene`, duh.).
 	try:
-		with open('sigma/scenes/first.py') as f:
-			global __firstFile__
-			__firstFile__ = f.read().strip()
+		with open('sigma/scenes/firstModule.py', "r") as f:
+			global __firstModule__
+			__firstModule__ = f.read().strip()
 			f.close()
 
 		return True
