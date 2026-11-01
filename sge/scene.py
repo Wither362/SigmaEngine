@@ -24,9 +24,12 @@ class Scene:
 		'''
 		self.objects = []
 
-	def Load(self):
+	def Load(self, args = None):
 		'''
-			Called when this scene loads.
+			Called when this scene loads.\n
+
+			**Params**:
+			- `args`: optional arguments in form of a `dict` that get defined when changing scene, for transferring data and such.
 		'''
 
 	def Draw(self, dt: float):
@@ -44,14 +47,14 @@ class Scene:
 			dtext(0, 0, C_WHITE, "FPS " + str(truncate(1 / dt, 1)))
 		dupdate()
 
-	def Update(self, sMN: str = None, sN: str = None, dt: float = -1):
+	def Update(self, sMN: str = None, sN: str = None, sA: dict = None, dt: float = -1):
 		'''
 			Called every frame **before** drawing the objects to the screen.
 			This DOES NOT CALL 'gint.dclear'.
 
 			**Overwrite Params**:
 			- `dt`: the delta time / how many seconds have passed since the last call to Update().
-			
+
 			**`super()` Params** in case you want to change scenes:
 			- `sMN`: shorter for `Scene Module Name`, which is the `filename` of the file where the new scene is in.
 			- `sN`: shorter for `Scene Name`, which is the name of the `scene class` you want to change to.
@@ -79,7 +82,7 @@ class Scene:
 			```
 		'''
 		self.Draw(dt)
-		return sMN, sN
+		return sMN, sN, sA
 
 	def AfterUpdate(self):
 		'''

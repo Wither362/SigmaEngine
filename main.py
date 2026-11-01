@@ -17,7 +17,6 @@ if (sys.platform == 'linux' or sys.platform == 'darwin' or sys.platform == 'win3
 	import desktop.desktop_time as time
 	import desktop.desktop_py_events as pyevents
 
-
 __firstModule__: str = ''
 '''
 	The NAME of the first MODULE (so it needs to be in a format like `scene`, or `folderInsideScenes.scene`) that will load up.
@@ -30,17 +29,10 @@ pressed_AC: bool = False
 
 # Micropython code
 def ExceptionPrinter(e):
-	 # Delete this 'if' if you are doing this in micropython, BUT NOT THE CODE BELOw.
-	if (sys.platform != 'linux' and sys.platform != 'darwin' and sys.platform != 'win32'):
-		# DO NOT DELETE THE CODE BELOW
-		s = StringIO()
-		sys.print_exception(e, s)
-		print(str(s.getvalue()))
-		del(s)
-	# THIS ONE YEES, DELETE THIS.
-	else:
-		print('ERR: ' + str(e))
-	# stop deleting.
+	s = StringIO()
+	sys.print_exception(e, s)
+	print(str(s.getvalue()))
+	del(s)
 
 
 def ChangeScene(sMN: str, sN: str):
@@ -51,39 +43,40 @@ def ChangeScene(sMN: str, sN: str):
 	return getattr(__import__('scenes.' + sMN, fromlist=[""]), sN)
 
 
-def MainExecution(fS):
+def MainExecution(s, args: dict = None):
 	'''
 		`fS` is shorter for `first scene`, which is `Scene` class.\n
+		`args` is shorter for `scene arguments`, which is a `dict` for the creation of the scene.\n
 		Contains the load of the first scenes, and the execution of the infinite and well-known "update" functions.\n
 		Called in `UncaughtExceptionHandler()`.
 	'''
 	try:
 		# load the scene.
-		s: Scene = fS()
-		s.Load()
+		s: Scene = s()
+		if (args):
+			s.Load(args)
+			del(args)
+		else:
+			s.Load()
 
-		# short for "last time"
-		lt: float = -1.0
-		now: float
+		lt: int = -1
+		now: int
 	
 		# UPDATE indefinitely the scene. (This is the MAIN LOOP)
 		while True:
 			now = time.ticks_ms()
 
-			# check pygame events
-			# THIS IS MEANT TO BE DELETED WHEN TRANSFERING TO MMICROPYTHON.
+			# THIS IS MEANT TO BE DELETED WHEN TRANSFERING TO MICROPYTHON.
 			pyevents.mainExecution()
-			# DONT DELETE THE REST
 
 			# send `dt` as deltaTime. You should already now what deltatime is.
-			sMN, sN = s.Update(dt = (time.ticks_diff(now, lt if lt != -1.0 else now) / 1000.0))
-			# sMN is the shorter form of `scene module name`, and sN of `scene name`.
+			sMN, sN, sArgs = s.Update(dt = (time.ticks_diff(now, lt if lt != -1 else now) / 1000.0))
 
 			# If those two aren't `None`, then the Scene wants to change places with a new Scene.
 			if (not sMN and not sN):
 				s.AfterUpdate()
 			else: # change scene.
-				s = ChangeScene(sMN, sN)
+				return sMN, sN, sArgs
 
 			lt = now
 
@@ -93,33 +86,31 @@ def MainExecution(fS):
 
 def UncaughtExceptionHandler():
 	'''
-		Simple yet NOT-effective Uncaught Exception Handler.
+		Simple yet half-effective Uncaught Exception Handler.
 		In case of the user presses the AC key without knowing or unconsciously.
 		Or, if SigmaEngine doesn't work at ALL.
 	'''
 	try:
-		# Now... it's time to shine.
-		MainExecution(ChangeScene(__firstModule__, 'FirstScene')) # the first scene is ALWAYS CALLED FirstScene
+		m, n, a = MainExecution(ChangeScene(__firstModule__, 'FirstScene')) # the first scene is ALWAYS CALLED FirstScene
 
-	except KeyboardInterrupt as e: # the player pressed the AC button
+		while True:
+			m, n, a = MainExecution(ChangeScene(m, n), a)
+	except KeyboardInterrupt as e:
 		global pressed_AC
 
-		if (pressed_AC): # if the User/Player wants to exit, we exit.
+		if (pressed_AC):
 			return
 
 		pressed_AC = True
 
-		UncaughtExceptionHandler() # Just get it on and try again, dumb.
+		UncaughtExceptionHandler()
 
 	except Exception as e: # All the other exceptions
 		print('---UNCAUGHT EXCEPTION HANDLER ERROR---')
 		ExceptionPrinter(e)
-		
-		# UncaughtExceptionHandler() # Just get it on and try again, dumb.
 
 
 def StartEngine():
-	# okay. Let's try to know what file is the first one (we already know that the first scene is called `FirstScene`, duh.).
 	try:
 		with open('sigma/scenes/firstModule.py', "r") as f:
 			global __firstModule__

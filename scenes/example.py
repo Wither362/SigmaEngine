@@ -1,15 +1,14 @@
 from sge.scene import Scene
 from sge.object import Object
 from sge.object_helper import *
-import gint
-import math
+import gint, math
 import random as r
 
 
 # Why is it called "FirstScene"? Because IT NEEDS TO BE LIKE THAT.
 class FirstScene(Scene):
 	# Called on scene load.
-	def Load(self):
+	def Load(self, args = None):
 		'''
 			In case you want to do something before SigmaEngine calls Update().
 			Idk what could you do, but however you like.
@@ -17,7 +16,7 @@ class FirstScene(Scene):
 		self.rectangles: list[obj.Object] = []
 		self.rectanglesD: list[list[int]] = []
 
-		for _ in range(r.randint(3, 8)):
+		for _ in range(8):
 			rect = Object(1) # Create a rectangle
 			# The short way to setting all the variables is this one:
 			rect = Rectangle(rect, 50 * r.uniform(0.3, 2), 50 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), gint.C_RGB(r.randint(10, 31), r.randint(10, 31), r.randint(10, 31)), zL = 1) # you may delete the zL parameter if you don't care about layers and just want it to work.
@@ -51,12 +50,12 @@ class FirstScene(Scene):
 	def Update(self, dt: float):
 		gint.dclear(gint.C_BLACK)
 
-		self.t += dt * 2
+		self.t += dt
 
 		# Take in count: ONE single object makes it so dt is around 0.016 and 0.043 seconds.
 		for i in range(len(self.rectangles)):
-			self.rectangles[i].x += dt * 20000 * self.rectanglesD[i][0]
-			self.rectangles[i].y += dt * 15000 * self.rectanglesD[i][1]
+			self.rectangles[i].x += dt * 12 * self.rectanglesD[i][0]
+			self.rectangles[i].y += dt * 12 * self.rectanglesD[i][1]
 
 			if ((self.rectangles[i].x - self.rectangles[i].hW < 0 and self.rectanglesD[i][0] < 0) or (self.rectangles[i].x + self.rectangles[i].hW > gint.DWIDTH and self.rectanglesD[i][0] < 1)):
 				self.rectanglesD[i][0] = -self.rectanglesD[i][0]
@@ -64,9 +63,9 @@ class FirstScene(Scene):
 			if ((self.rectangles[i].y - self.rectangles[i].hH < 0 and self.rectanglesD[i][1] < 0) or (self.rectangles[i].y + self.rectangles[i].hH > gint.DHEIGHT and self.rectanglesD[i][1] > 0)):
 				self.rectanglesD[i][1] = -self.rectanglesD[i][1]
 
-		self.circle.x += dt * 20000 * self.cXD
-		self.circle.y += dt * 17000 * self.cYD
-		self.circle.r = 35 * abs(math.cos(self.t * 150))
+		self.circle.x += dt * 12 * self.cXD
+		self.circle.y += dt * 12 * self.cYD
+		self.circle.r = 35 * abs(math.cos(self.t / 2))
 
 		if (self.circle.r <= 17.5):
 			if (self.circle.zL != 4): # only execute SortObjects ONCE, NOT EVERY FRAME
@@ -89,6 +88,8 @@ class FirstScene(Scene):
 		elif (self.circle.y + max(self.circle.r, self.circle2.r) > gint.DHEIGHT and self.cYD == 1):
 			self.cYD = -1
 
+		if (self.t > 10):
+			return super().Update(sMN= 'example2', sN='Example2', dt = dt)
 		return super().Update(dt = dt) # we could return sMN = 'scene2_file' and sN = 'Scene2' if we wanted to change the scene to Scene2 which is supposely inside scene2.py.
 
 	def AfterUpdate(self):

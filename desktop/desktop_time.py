@@ -4,7 +4,7 @@
 	DELETE THE ENTIRE `\desktop\` FOLDER IF ON MICROPYTHON.
 '''
 
-from time import perf_counter
+import time
 
 
 paused_timer = 0
@@ -18,12 +18,10 @@ def ticks_ms():
 		Returns how many ticks (miliseconds) have passed since the start of the program in miliseconds.
 	'''
 	if (paused_timer > 0):
-		return perf_counter() - paused_timer
-	return perf_counter()
+		return time.ticks_ms() - paused_timer
+	return time.ticks_ms()
 def ticks():
-	if (paused_timer > 0):
-		return perf_counter() - (paused_timer / 1000)
-	return perf_counter()
+	return ticks_ms() / 1000
 def ticks_diff(tick1, tick2): return tick1 - tick2
 
 def __start_paused_ticks__():
