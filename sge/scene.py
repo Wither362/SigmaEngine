@@ -86,9 +86,11 @@ class Scene:
 
 	def SortObjects(self):
 		'''
-			Sorts its objects by their `zLayer`.
+			Sorts its objects by their `zL` attribute.
 			Supposely called when a new object is added or whenever the code feels like it needs to.
-			You can call it whenever you want tho.
+			You can call it whenever you want tho, **but** it's a quite laggy function if the scene has a lot of objects,
+			as the code needs to go through all of the scene.objects and then sort them according to their `zL` attribute
+			(which will be `0` in case that attribute doesn't exist.)
 		'''
 		self.objects = sorted(self.objects, key = lambda o: o.zL if hasattr(o, 'zL') else 0)
 

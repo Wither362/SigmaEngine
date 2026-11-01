@@ -20,7 +20,7 @@ class FirstScene(Scene):
 		for i in range(r.randint(3, 8)):
 			rect = Object(1) # Create a rectangle
 			# The short way to setting all the variables is this one:
-			rect = Rectangle(rect, 50 * r.uniform(0.3, 2), 50 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), gint.C_RGB(r.randint(10, 31), r.randint(10, 31), r.randint(10, 31)))
+			rect = Rectangle(rect, 50 * r.uniform(0.3, 2), 50 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), gint.C_RGB(r.randint(10, 31), r.randint(10, 31), r.randint(10, 31)), zL = 1) # you may delete the zL parameter if you don't care about layers and just want it to work.
 			# if not, you would have to do this:
 			# self.big_rectangle.x, self.big_rectangle.y, self.big_rectangle.width, self.big_rectangle.height = 50, 50, 70, 70 # Adjust position and size
 			# self.big_rectangle.innerColor = gint.C_BLUE # Adjust color
@@ -69,11 +69,11 @@ class FirstScene(Scene):
 		self.circle.r = 35 * abs(math.cos(self.t * 150))
 
 		if (self.circle.r <= 17.5):
-			if (self.circle.zL != 1):
-				self.circle.zL = 1
+			if (self.circle.zL != 1): # only execute SortObjects ONCE, NOT EVERY FRAME
+				self.circle.zL = 3
 				self.SortObjects()
 		elif (self.circle.zL != -1):
-			self.circle.zL = -1
+			self.circle.zL = 2
 			self.SortObjects()
 
 		self.circle2.x = self.circle.x

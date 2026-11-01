@@ -211,7 +211,7 @@ def dfont(font: GintFont):
 # ------------------------------------------------------------------------------
 
 # Load bitmap font
-_uf8x9_font = pygame.image.load("win32/_data/font8x9.png").convert()
+_uf8x9_font = pygame.image.load("desktop/_data/font8x9.png").convert()
 # _uf8x9_font = pygame.image.load("_data/uf8x9.png").convert()
 _uf8x9_font.set_colorkey((255, 255, 255))  # Make white transparent
 _uf8x9_font = _uf8x9_font.convert_alpha()

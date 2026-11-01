@@ -8,14 +8,14 @@ from sge.scene import Scene
 from io import StringIO
 
 # Micropython dependencies
-if sys.platform != 'win32':
+if (sys.platform != 'linux' and sys.platform != 'darwin' and sys.platform != 'win32'):
 	import time
 
 # Dependencies for Python 3.13 and all that. Delete this if in micropython.
-if sys.platform == 'win32':
-	import pygame
-	from win32.win32_file_system import open
-	import win32.win32_time as time
+if (sys.platform == 'linux' or sys.platform == 'darwin' or sys.platform == 'win32'):
+	from desktop.desktop_file_system import open
+	import desktop.desktop_time as time
+	import desktop.desktop_py_events as pyevents
 
 
 __firstFile__: str = ''
@@ -44,13 +44,17 @@ pressed_AC: bool = False
 
 # Micropython code
 def ExceptionPrinter(e):
-	if(sys.platform != 'win32'): # Delete this 'if' if you are doing this in micropython, BUT NOT THE CODE BELOw.
+	 # Delete this 'if' if you are doing this in micropython, BUT NOT THE CODE BELOw.
+	if (sys.platform != 'linux' and sys.platform != 'darwin' and sys.platform != 'win32'):
+		# DO NOT DELETE THE CODE BELOW
 		s = StringIO()
 		sys.print_exception(e, s)
 		print(str(s.getvalue()))
 		del(s)
+	# THIS ONE YEES, DELETE THIS.
 	else:
 		print('ERR: ' + str(e))
+	# stop deleting.
 
 
 def MainExecution():
@@ -66,21 +70,17 @@ def MainExecution():
 
 		# short for "last time"
 		lt: float = -1.0
-		now: float = float()
-	 
+		now: float
+	
 		# UPDATE indefinitely the scene. (This is the MAIN LOOP)
 		while True:
-			# check whether the dev wants to close the Pygame loop
+			now = time.ticks_ms()
+
+			# check pygame events
 			# THIS IS MEANT TO BE DELETED WHEN TRANSFERING TO MMICROPYTHON.
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					pygame.quit()
-					sys.exit()
-
-
+			pyevents.mainExecution()
 			# DONT DELETE THE REST
 
-			now = time.ticks_ms()
 
 			# send `dt` as deltaTime. You should already now what is deltatime.
 			if (s.Update(dt = (time.ticks_diff(now, lt if lt != -1.0 else now) / 1000.0))):
@@ -95,7 +95,6 @@ def MainExecution():
 	except Exception as e:
 		# Return the error to the UncaughtExceptionHandler cause he's a very good boy
 		raise e
-
 
 def UncaughtExceptionHandler():
 	'''
