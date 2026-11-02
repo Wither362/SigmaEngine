@@ -70,4 +70,5 @@ class Object:
 		if (self.s == 0):
 			dcircle(int(self.x), int(self.y), int(self.r), self.iC, self.bC)
 		elif (self.s == 1):
-			drect_border(int(self.x) - self.hW, int(self.y) - self.hH, int(self.x) + self.hW, int(self.y) + self.hH, self.iC, self.bS, self.bC)
+			print(type(int(self.x) - self.hW))
+			drect_border(int(self.x - self.hW), int(self.y - self.hH), int(self.x + self.hW), int(self.y + self.hH), self.iC, self.bS, self.bC)
