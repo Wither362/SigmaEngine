@@ -70,13 +70,13 @@ def MainExecution(s, args: dict = None):
 			pyevents.mainExecution()
 
 			# send `dt` as deltaTime. You should already now what deltatime is.
-			sMN, sN, sArgs = s.Update(dt = (time.ticks_diff(now, lt if lt != -1 else now) / 1000.0))
+			sMN, sN = s.Update(dt = (time.ticks_diff(now, lt if lt != -1 else now) / 1000.0))
 
 			# If those two aren't `None`, then the Scene wants to change places with a new Scene.
 			if (not sMN and not sN):
 				s.AfterUpdate()
 			else: # change scene.
-				return sMN, sN, sArgs
+				return sMN, sN, s.Destroy() # scene.Destroy can return a dict with data
 
 			lt = now
 

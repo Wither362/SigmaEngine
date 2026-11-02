@@ -3,9 +3,9 @@
 '''
 
 from sge.math import truncate
-from sge.object import Object
+from sge.object import Object, on_screen
 from sge.camera import Camera
-from gint import dupdate, dtext, C_WHITE
+from gint import dupdate, dtext, drect_border, dcircle, C_WHITE
 
 class Scene:
 	'''
@@ -16,6 +16,8 @@ class Scene:
 
 	objects: list[Object]
 	'''objects which will be represented on screen'''
+	d_bboxes: list[Object] = []
+	'''Shorter for `drawn bounding boxes`.'''
 	camera: Camera
 
 	def __init__(self):
@@ -37,9 +39,36 @@ class Scene:
 			Draws the objects on screen.
 		'''
 
+		self.d_bboxes.clear()
 		if (len(self.objects) >= 0):
-			for obj in self.objects:
-				obj.Draw()
+			def ins(inner, outer): # shorter for "fully inside outer"
+				ix, iy, iw, ih = inner
+				ox, oy, ow, oh = outer
+				
+				# Inner must be >= Outer start AND <= Outer end
+				return (ix >= ox and iy >= oy and 
+						(ix + iw) <= (ox + ow) and 
+						(iy + ih) <= (oy + oh))
+			for o in self.objects:
+				if (not on_screen(o)):
+					continue
+
+				bbox = o.get_bbox() # shorter for bounding box
+				hid = False # shorter for hidden
+				for dbbox in self.d_bboxes:
+					if ins(bbox, dbbox):
+						hid = True
+						break
+
+				if hid: continue
+
+				if (o.s == 0):
+					dcircle(int(o.x), int(o.y), int(o.r), o.iC, o.bC)
+				elif (o.s == 1):
+					drect_border(int(o.x - o.hW), int(o.y - o.hH), int(o.x + o.hW), int(o.y + o.hH), o.iC, o.bS, o.bC)
+
+				self.d_bboxes.append(bbox)
+
 
 		# Add a little text at the top left corcer of the screen
 		# which tells at how many fps the game is running
@@ -47,7 +76,7 @@ class Scene:
 			dtext(0, 0, C_WHITE, "FPS " + str(truncate(1 / dt, 1)))
 		dupdate()
 
-	def Update(self, sMN: str = None, sN: str = None, sA: dict = None, dt: float = -1):
+	def Update(self, sMN: str = None, sN: str = None, dt: float = -1):
 		'''
 			Called every frame **before** drawing the objects to the screen.
 			This DOES NOT CALL 'gint.dclear'.
@@ -64,30 +93,38 @@ class Scene:
 			class ExampleScene(Scene):
 			  # as you should now, it's important that you also add the 'self' part to the function.
 			 def Update(self, dt):
-			    global change_scene, is_user_lagging
-			    change_scene: bool = False
-			    is_user_lagging = False
-			    # maybe check user input
-			    if (user_is_inputting):
-			      change_scene = True
-			    if (dt > 0.1):
-			      is_user_lagging = True
+				global change_scene, is_user_lagging
+				change_scene: bool = False
+				is_user_lagging = False
+				# maybe check user input
+				if (user_is_inputting):
+				  change_scene = True
+				if (dt > 0.1):
+				  is_user_lagging = True
 					
-			    if (change_scene or is_user_lagging):
-			      # Return a super cool and awesome str to make SigmaEngine change scenes.
+				if (change_scene or is_user_lagging):
+				  # Return a super cool and awesome str to make SigmaEngine change scenes.
 				  # the **class** `SuperAwesomeScene` is inside the file `super_awesome.py`
-			      return super().Update(sMN = 'super_awesome', sN = 'SuperAwesomeScene')
-			    else: # this 'else' could be deleted ngl
-			      return super().Update() # don't tell NOTHING.
+				  return super().Update(sMN = 'super_awesome', sN = 'SuperAwesomeScene')
+				else: # this 'else' could be deleted ngl
+				  return super().Update() # don't tell NOTHING.
 			```
 		'''
 		self.Draw(dt)
-		return sMN, sN, sA
+		return sMN, sN
 
 	def AfterUpdate(self):
 		'''
 			Called after drawing the objects (Update()).
 		'''
+
+	def Destroy(self, args: dict = None):
+		'''
+			Called when scene is being destroyed.
+			Used for deleting large lists and performance eaters.
+			And used to return parameters for the next scene.
+		'''
+		return args
 
 	def SortObjects(self):
 		'''
@@ -105,12 +142,4 @@ class Scene:
 		'''
 		self.objects.append(object)
 		self.SortObjects()
-
-	
-
-
-
-
-
-
 

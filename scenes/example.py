@@ -1,5 +1,5 @@
 from sge.scene import Scene
-from sge.object import Object
+from sge.object import RectObj, CircObj
 from sge.object_helper import *
 import gint, math
 import random as r
@@ -13,11 +13,11 @@ class FirstScene(Scene):
 			In case you want to do something before SigmaEngine calls Update().
 			Idk what could you do, but however you like.
 		'''
-		self.rectangles: list[obj.Object] = []
+		self.rectangles: list[object] = []
 		self.rectanglesD: list[list[int]] = []
 
 		for _ in range(200):
-			rect = Object(1) # Create a rectangle
+			rect = RectObj() # Create a rectangle
 			# The short way to setting all the variables is this one:
 			rect = Rectangle(rect, 50 * r.uniform(0.3, 2), 50 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), gint.C_RGB(r.randint(10, 31), r.randint(10, 31), r.randint(10, 31)), zL = 1) # you may delete the zL parameter if you don't care about layers and just want it to work.
 			# if not, you would have to do this:
@@ -31,12 +31,12 @@ class FirstScene(Scene):
 			self.rectangles.append(rect) # (the whole for i loop is completely optional, btw)
 			self.rectanglesD.append([xD, yD])
 
-		self.circle = Object(0)
+		self.circle = CircObj()
 		self.circle = Circle(self.circle, gint.DWIDTH - 20, 170, 35, gint.C_RGB(12, 3, 11), gint.C_RGB(7, 2, 6))
 		self.circle.zL = 0
 		self.Add(self.circle)
 
-		self.circle2 = Object(0)
+		self.circle2 = CircObj()
 		self.circle2 = Circle(self.circle2, gint.DWIDTH - 20, 170, 17.5, gint.C_RGB(14, 5, 13), gint.C_RGB(9, 4, 8), zL = 3)
 		self.Add(self.circle2)
 
@@ -89,8 +89,6 @@ class FirstScene(Scene):
 			self.cYD = -1
 
 		if (self.t > 10):
+			del(self.rectangles, self.rectanglesD)
 			return super().Update(sMN= 'example2', sN='Example2', dt = dt)
 		return super().Update(dt = dt) # we could return sMN = 'scene2_file' and sN = 'Scene2' if we wanted to change the scene to Scene2 which is supposely inside scene2.py.
-
-	def AfterUpdate(self):
-		return super().AfterUpdate()
