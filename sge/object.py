@@ -2,15 +2,19 @@
 	A SigmaEngine component that has a graphic (optional) and a position in a Scene.
 '''
 
-from sge.pointer import Pointer
 from gint import drect_border, dcircle, C_NONE
 
-class Object(Pointer):
+class Object:
 	'''
 		A SigmaEngine component that has a graphic and a position.\n
 		All of its possible attributes have been stripped down to just one or two letters for memory optimizations.\n
 		Take it in mind.
 	'''
+
+	x: float
+	'''X position of the object'''
+	y: float
+	'''Y position of the object'''
 
 	s: int
 	'''Shorter for `shape`, since in Micropython, size is important.'''
@@ -67,10 +71,3 @@ class Object(Pointer):
 			dcircle(int(self.x), int(self.y), int(self.r), self.iC, self.bC)
 		elif (self.s == 1):
 			drect_border(int(self.x) - self.hW, int(self.y) - self.hH, int(self.x) + self.hW, int(self.y) + self.hH, self.iC, self.bS, self.bC)
-			# drect(int(self.x) - (self.w // 2), int(self.y) - (self.h // 2), int(self.x) + (self.w // 2), int(self.y) + (self.h // 2), self.iC)
-			# maybe drect(int(self.x) - (self.width // 2), int(self.y) - (self.height // 2), int(self.x) + (self.width // 2), int(self.y) + (self.height // 2), self.innerColor) is more efficient? I'll have to find out.
-
-
-
-
-

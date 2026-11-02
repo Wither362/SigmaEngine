@@ -16,7 +16,7 @@ class FirstScene(Scene):
 		self.rectangles: list[obj.Object] = []
 		self.rectanglesD: list[list[int]] = []
 
-		for _ in range(8):
+		for _ in range(200):
 			rect = Object(1) # Create a rectangle
 			# The short way to setting all the variables is this one:
 			rect = Rectangle(rect, 50 * r.uniform(0.3, 2), 50 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), gint.C_RGB(r.randint(10, 31), r.randint(10, 31), r.randint(10, 31)), zL = 1) # you may delete the zL parameter if you don't care about layers and just want it to work.
@@ -63,9 +63,9 @@ class FirstScene(Scene):
 			if ((self.rectangles[i].y - self.rectangles[i].hH < 0 and self.rectanglesD[i][1] < 0) or (self.rectangles[i].y + self.rectangles[i].hH > gint.DHEIGHT and self.rectanglesD[i][1] > 0)):
 				self.rectanglesD[i][1] = -self.rectanglesD[i][1]
 
-		self.circle.x += dt * 12 * self.cXD
-		self.circle.y += dt * 12 * self.cYD
-		self.circle.r = 35 * abs(math.cos(self.t / 2))
+		self.circle.x += dt * self.cXD * 12
+		self.circle.y += dt * self.cYD * 12
+		self.circle.r = abs(math.cos(self.t / 2)) * 35
 
 		if (self.circle.r <= 17.5):
 			if (self.circle.zL != 4): # only execute SortObjects ONCE, NOT EVERY FRAME

@@ -40,7 +40,7 @@ def ChangeScene(sMN: str, sN: str):
 	`sMN` is `scene module name`, `sN` is `scene name`.\n
 	Returns the `Scene` inside the module `sMN` 
 	'''
-	return getattr(__import__('scenes.' + sMN, fromlist=[""]), sN)
+	return getattr(__import__('scenes.' + sMN, None, None, [sN], 0), sN)
 
 
 def MainExecution(s, args: dict = None):

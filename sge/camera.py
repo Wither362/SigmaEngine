@@ -1,10 +1,13 @@
 '''SigmaEngine's form of displaying the scenes to the screen.'''
 
-from sge.pointer import Pointer
-
-class Camera(Pointer):
+class Camera:
 	'''SigmaEngine's form of displaying the scenes to the screen.'''
 
-	width: float
-	height: float
-	rotationZ: float
+	x: int
+	'''X position of the camera'''
+	y: int
+	'''Y position of the camera'''
+	
+	width: int
+	height: int
+	# rotationZ: float
