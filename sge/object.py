@@ -3,7 +3,11 @@
 '''
 
 from gint import C_NONE, DWIDTH, DHEIGHT
+from micropython import const # type: ignore
 
+C = const(0)
+R = const(1)
+P = const(2)
 
 def on_screen(obj):
     x, y, w, h = obj.get_bbox()
@@ -61,14 +65,14 @@ class Object:
     	Returns False if the object is completely off-screen.
 		'''
 
-class CircObj:
+class CObj:
 	'''
 		A SigmaEngine component that has a graphic and a position.\n
 		All of its possible attributes have been stripped down to just one or two letters for memory optimizations.\n
 		Take it in mind.
 	'''
 
-	s: int = 0
+	s: int = C
 	'''
 	Shorter for `shape`.
 	- `0` = circle
@@ -96,14 +100,14 @@ class CircObj:
 		return (self.x - r, self.y - r, r * 2, r * 2)
 
 
-class RectObj:
+class RObj:
 	'''
 		A SigmaEngine component that has a graphic and a position.\n
 		All of its possible attributes have been stripped down to just one or two letters for memory optimizations.\n
 		Take it in mind.
 	'''
 
-	s: int = 1
+	s: int = R
 	'''
 	Shorter for `shape`.
 	- `0` = circle
@@ -133,14 +137,14 @@ class RectObj:
 		'''Returns the bounding box of this object'''
 		return (self.x, self.y, self.hW * 2, self.hH * 2)
 
-class PolyObj:
+class PObj:
 	'''
 		A SigmaEngine component that has a graphic and a position.\n
 		All of its possible attributes have been stripped down to just one or two letters for memory optimizations.\n
 		Take it in mind.
 	'''
 
-	s: int = 2
+	s: int = P
 	'''
 	Shorter for `shape`.
 	- `0` = circle

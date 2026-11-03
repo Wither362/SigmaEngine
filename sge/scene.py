@@ -3,7 +3,7 @@
 '''
 
 from sge.math import truncate
-from sge.object import Object, on_screen
+from sge.object import Object, on_screen, R, C, C
 from sge.camera import Camera
 from gint import dupdate, dtext, drect_border, dcircle, C_WHITE
 
@@ -16,8 +16,6 @@ class Scene:
 
 	objects: list[Object]
 	'''objects which will be represented on screen'''
-	d_bboxes: list[Object] = []
-	'''Shorter for `drawn bounding boxes`.'''
 	camera: Camera
 
 	def __init__(self):
@@ -39,35 +37,15 @@ class Scene:
 			Draws the objects on screen.
 		'''
 
-		self.d_bboxes.clear()
 		if (len(self.objects) >= 0):
-			def ins(inner, outer): # shorter for "fully inside outer"
-				ix, iy, iw, ih = inner
-				ox, oy, ow, oh = outer
-				
-				# Inner must be >= Outer start AND <= Outer end
-				return (ix >= ox and iy >= oy and 
-						(ix + iw) <= (ox + ow) and 
-						(iy + ih) <= (oy + oh))
 			for o in self.objects:
 				if (not on_screen(o)):
 					continue
 
-				bbox = o.get_bbox() # shorter for bounding box
-				hid = False # shorter for hidden
-				for dbbox in self.d_bboxes:
-					if ins(bbox, dbbox):
-						hid = True
-						break
-
-				if hid: continue
-
-				if (o.s == 0):
+				if (o.s == C):
 					dcircle(int(o.x), int(o.y), int(o.r), o.iC, o.bC)
-				elif (o.s == 1):
+				elif (o.s == R):
 					drect_border(int(o.x - o.hW), int(o.y - o.hH), int(o.x + o.hW), int(o.y + o.hH), o.iC, o.bS, o.bC)
-
-				self.d_bboxes.append(bbox)
 
 
 		# Add a little text at the top left corcer of the screen
@@ -113,7 +91,7 @@ class Scene:
 		self.Draw(dt)
 		return sMN, sN
 
-	def AfterUpdate(self):
+	def AfterUpdate(self, dt: float):
 		'''
 			Called after drawing the objects (Update()).
 		'''
