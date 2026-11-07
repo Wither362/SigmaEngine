@@ -1,4 +1,4 @@
-import time # BELA ASHASDJI AUAIIDFIBSDF
+import time
 import pygame
 from pygame.locals import *
 import sys
