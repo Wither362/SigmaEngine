@@ -1,5 +1,4 @@
 from typing import Tuple, Union, Final
-
 # Complex number type hint
 Complex = Union[complex, Tuple[float, float]]
 

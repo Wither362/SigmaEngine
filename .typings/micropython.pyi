@@ -1,5 +1,4 @@
 # micropython module: access and control MicroPython internals
-
 from typing import Any, Callable, Optional
 
 def const(expr: Any) -> Any:

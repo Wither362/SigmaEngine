@@ -1,5 +1,4 @@
 from typing import Optional, Tuple, Union
-
 def monotonic() -> float:
     """
     Returns the clock value at the time the function is called.

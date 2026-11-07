@@ -1,5 +1,4 @@
 from typing import Any, BinaryIO, Optional, TextIO, Union, overload
-
 @overload
 def open(name: str, mode: str = 'r', **kwargs: Any) -> TextIO: ...
 @overload

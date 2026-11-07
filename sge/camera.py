@@ -1,5 +1,4 @@
 '''SigmaEngine's form of displaying the scenes to the screen.'''
-
 class Camera:
 	'''SigmaEngine's form of displaying the scenes to the screen.'''
 

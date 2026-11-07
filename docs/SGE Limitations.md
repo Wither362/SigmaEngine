@@ -1,5 +1,4 @@
 # SGE Limitations
-
 There's some limitations with making an engine for a freakin' calculator that you, dev, NEED to know.
 
 ## File System

@@ -1,5 +1,4 @@
 from typing import Any, List, Optional, Sequence, Tuple, Union
-
 def choice(seq: Sequence[Any]) -> Any:
     """
     Choose random element from sequence.

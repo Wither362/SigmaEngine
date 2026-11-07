@@ -1,5 +1,4 @@
 from typing import Any, BinaryIO, Iterable, List, Literal, Tuple, TypeVar, Union
-
 _T = TypeVar('_T')
 
 class array:

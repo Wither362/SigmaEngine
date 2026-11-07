@@ -1,5 +1,4 @@
 from typing import Literal, Tuple
-
 def show_screen() -> None:
     """Update display with current VRAM contents."""
     ...

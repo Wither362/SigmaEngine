@@ -1,5 +1,4 @@
 # SigmaEngine DOCS
-
 SigmaEngine is a game engine (or tool engine) for the FX-CG50 / Prizm Calculators.
 
 It's meant to be fairly similar to Unity's C# and MonoBehaviour style of coding, to make matters easier and fairly simple to understand and use.

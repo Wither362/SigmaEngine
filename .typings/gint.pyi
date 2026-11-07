@@ -1,5 +1,4 @@
 # Generated automatically from modgint.c
-
 from typing import Any, List, Literal, Optional, Tuple, Union
 
 BufferLike = Any

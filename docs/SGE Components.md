@@ -1,5 +1,4 @@
 # SGE Components
-
 In SGE, there are `Scenes`, which may contain `Objects` and a `Camera`.
 
 This manual contains information about how to use these components.

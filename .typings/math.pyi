@@ -1,5 +1,4 @@
 from typing import SupportsFloat, Final
-
 def acos(x: SupportsFloat, /) -> float:
     """
     Return the inverse cosine of ``x``.

@@ -1,5 +1,4 @@
 from typing import Callable, Final, Literal, NoReturn
-
 class Implementation(tuple[str, tuple[int, int, int], int]):
     name: str
     version: tuple[int, int, int]
