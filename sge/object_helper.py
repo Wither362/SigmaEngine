@@ -1,9 +1,9 @@
 '''
 	Module for separating "object" and the "object generators".
 '''
-import sge.object as obj
+from sge.object import Obj
 
-def Rect(o: obj.Object, x: float, y: float, w: float, h: float, c, zL: int = 0):
+def Rect(o: Obj, x: float, y: float, w: float, h: float, c, zL: int = 0):
 	'''
 		Sets the shape of the object `o` as a rectangle and sets its attributes.
 		It's a great way to not forget want attributes you have to specify in order for SGE to work properly.
@@ -13,7 +13,7 @@ def Rect(o: obj.Object, x: float, y: float, w: float, h: float, c, zL: int = 0):
 		o.zL = zL
 	return o
 
-def Circ(o: obj.Object, x: float, y: float, r: float, c: int, bC: int, zL: int = 0):
+def Circ(o: Obj, x: float, y: float, r: float, c: int, bC: int, zL: int = 0):
 	'''
 		Sets the shape of the object `o` as a circle and sets its attributes.
 		It's a great way to not forget want attributes you have to specify in order for SGE to work properly.

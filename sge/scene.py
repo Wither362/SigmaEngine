@@ -3,7 +3,7 @@
 '''
 
 from sge.math import truncate
-from sge.object import Object, on_screen, R, C, C
+from sge.object import Obj, on_screen, R, C, C
 from sge.camera import Camera
 from gint import dupdate, dtext, drect_border, dcircle, C_WHITE
 
@@ -14,15 +14,15 @@ class Scene:
 		There may only be one single Scene at a time.
 	'''
 
-	objects: list[Object]
+	objs: list[Obj]
 	'''objects which will be represented on screen'''
-	camera: Camera
+	cam: Camera
 
 	def __init__(self):
 		'''
 			Creates a new Scene.
 		'''
-		self.objects = []
+		self.objs = []
 
 	def Load(self, args = None):
 		'''
@@ -37,8 +37,8 @@ class Scene:
 			Draws the objects on screen.
 		'''
 
-		if (len(self.objects) >= 0):
-			for o in self.objects:
+		if (len(self.objs) >= 0):
+			for o in self.objs:
 				if (not on_screen(o)):
 					continue
 
@@ -70,7 +70,7 @@ class Scene:
 			```py
 			class ExampleScene(Scene):
 			  # as you should now, it's important that you also add the 'self' part to the function.
-			 def Update(self, dt):
+			  def Update(self, dt):
 				global change_scene, is_user_lagging
 				change_scene: bool = False
 				is_user_lagging = False
@@ -112,12 +112,12 @@ class Scene:
 			as the code needs to go through all of the scene.objects and then sort them according to their `zL` attribute
 			(which will be `0` in case that attribute doesn't exist.)
 		'''
-		self.objects = sorted(self.objects, key = lambda o: o.zL if hasattr(o, 'zL') else 0)
+		self.objs = sorted(self.objs, key = lambda o: o.zL if hasattr(o, 'zL') else 0)
 
-	def Add(self, object):
+	def Add(self, o):
 		'''
-			Adds `obj` to the list of objects to draw to the scene.
+			Adds `o` (SGE Object) to the list of objects to draw to the scene.
 		'''
-		self.objects.append(object)
+		self.objs.append(o)
 		self.SortObjects()
 

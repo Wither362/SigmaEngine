@@ -17,7 +17,7 @@ def on_screen(obj):
     
     return True
 
-class Object:
+class Obj:
 	'''
 		A SigmaEngine component that has a graphic and a position.\n
 		All of its possible attributes have been stripped down to just one or two letters for memory optimizations.\n
