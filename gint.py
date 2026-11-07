@@ -37,7 +37,7 @@ screen = pygame.display.set_mode((DWIDTH, DHEIGHT))
 pygame.display.set_caption("ClassPad")
 vram = pygame.Surface((DWIDTH, DHEIGHT))
 clock = pygame.time.Clock()
-FPS = 100  # Adjust to control game speed
+FPS = 30  # Adjust to control game speed
 
 # --- NEW: Window Clipping State ---
 _dwindow = (0, 0, DWIDTH, DHEIGHT)
