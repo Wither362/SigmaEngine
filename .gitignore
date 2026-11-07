@@ -4,3 +4,5 @@ src/__pycache__
 google_docs
 *.ini
 *.gdoc
+*.gscript
+google docs clone
