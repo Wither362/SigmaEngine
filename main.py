@@ -3,9 +3,11 @@
 '''
 
 # Normal dependencies required on both sides
-import sys
 from sge.scene import Scene
-from io import StringIO
+from sge.sys import ExceptionPrinter
+
+
+import sys # delete also if in micropython
 
 # Micropython dependencies
 if (sys.platform != 'linux' and sys.platform != 'darwin' and sys.platform != 'win32'):
@@ -17,22 +19,14 @@ if (sys.platform == 'linux' or sys.platform == 'darwin' or sys.platform == 'win3
 	import desktop.desktop_time as time
 	import desktop.desktop_py_events as pyevents
 
-__firstModule__: str = ''
+fM: str = ''
 '''
 	The NAME of the first MODULE (so it needs to be in a format like `scene`, or `folderInsideScenes.scene`) that will load up.
 	Defined in `scenes/first.py`.
 '''
 
 
-pressed_AC: bool = False
-
-
-# Micropython code
-def ExceptionPrinter(e):
-	s = StringIO()
-	sys.print_exception(e, s)
-	print(str(s.getvalue()))
-	del(s)
+pAC: bool = None
 
 
 def ChangeScene(sMN: str, sN: str):
@@ -91,17 +85,20 @@ def UncaughtExceptionHandler():
 		Or, if SigmaEngine doesn't work at ALL.
 	'''
 	try:
-		m, n, a = MainExecution(ChangeScene(__firstModule__, 'FirstScene')) # the first scene is ALWAYS CALLED FirstScene
+		m, n, a = MainExecution(ChangeScene(fM, 'FirstScene')) # the first scene is ALWAYS CALLED FirstScene
 
 		while True:
 			m, n, a = MainExecution(ChangeScene(m, n), a)
 	except KeyboardInterrupt as e:
-		global pressed_AC
+		global pAC
 
-		if (pressed_AC):
+		if (pAC == None):
+			pAC = False
+		elif (not pAC):
+			pAC = True
+		elif (pAC):
 			return
 
-		pressed_AC = True
 
 		UncaughtExceptionHandler()
 
@@ -113,13 +110,14 @@ def UncaughtExceptionHandler():
 def StartEngine():
 	try:
 		with open('sigma/scenes/firstModule.py', "r") as f:
-			global __firstModule__
-			__firstModule__ = f.read().strip()
+			global fM
+			fM = f.read().strip()
 			f.close()
 
 		return True
 	except Exception as e:
-		print("ERROR: Could NOT load the first scene!: " + str(e))
+		# this doesn't go through the ExceptionPrinter to have two different systems for printing exceptions
+		print("ERROR: Could NOT load the first scene!: ")
 		return False
 
 

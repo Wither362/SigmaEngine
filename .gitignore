@@ -6,3 +6,5 @@ google_docs
 *.gdoc
 *.gscript
 google docs clone
+.tmp.*
+saves/data.py
