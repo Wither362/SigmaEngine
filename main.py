@@ -37,47 +37,6 @@ def ChangeScene(sMN: str, sN: str):
 	return getattr(__import__('scenes.' + sMN, None, None, [sN], 0), sN)
 
 
-def MainExecution(s, args: dict = None):
-	'''
-		`fS` is shorter for `first scene`, which is `Scene` class.\n
-		`args` is shorter for `scene arguments`, which is a `dict` for the creation of the scene.\n
-		Contains the load of the first scenes, and the execution of the infinite and well-known "update" functions.\n
-		Called in `UncaughtExceptionHandler()`.
-	'''
-	try:
-		# load the scene.
-		s: Scene = s()
-		if (args):
-			s.Load(args)
-			del(args)
-		else:
-			s.Load()
-
-		lt: int = -1
-		now: int
-	
-		# UPDATE indefinitely the scene. (This is the MAIN LOOP)
-		while True:
-			now = time.ticks_ms()
-
-			# THIS IS MEANT TO BE DELETED WHEN TRANSFERING TO MICROPYTHON.
-			pyevents.mainExecution()
-
-			# send `dt` as deltaTime. You should already now what deltatime is.
-			sMN, sN = s.Update(dt = (time.ticks_diff(now, lt if lt != -1 else now) / 1000.0))
-
-			# If those two aren't `None`, then the Scene wants to change places with a new Scene.
-			if (not sMN and not sN):
-				s.AfterUpdate(dt = (time.ticks_diff(now, lt if lt != -1 else now) / 1000.0))
-			else: # change scene.
-				return sMN, sN, s.Destroy() # scene.Destroy can return a dict with data
-
-			lt = now
-
-	except Exception as e:
-		# Return the error to the UncaughtExceptionHandler cause he's a very good boy
-		raise e
-
 def UncaughtExceptionHandler():
 	'''
 		Simple yet half-effective Uncaught Exception Handler.
@@ -85,10 +44,34 @@ def UncaughtExceptionHandler():
 		Or, if SigmaEngine doesn't work at ALL.
 	'''
 	try:
-		m, n, a = MainExecution(ChangeScene(fM, 'FirstScene')) # the first scene is ALWAYS CALLED FirstScene
+		# the first scene is ALWAYS CALLED FirstScene
+		m, n, a = fM, 'FirstScene', None
 
-		while True:
-			m, n, a = MainExecution(ChangeScene(m, n), a)
+		while True: # Main load, update and destroy code.
+			# load the scene.
+			s: Scene = ChangeScene(m, n)()
+			s.Load(a)
+	
+			lt: int = -1
+			now: int
+	
+			# UPDATE indefinitely the scene. (This is the MAIN LOOP)
+			while True:
+				now = time.ticks_ms()
+	
+				# THIS IS MEANT TO BE DELETED WHEN TRANSFERING TO MICROPYTHON.
+				pyevents.mainExecution()
+	
+				# send `dt` as deltaTime. You should already now what deltatime is.
+				sM, sN = s.Update(dt = (time.ticks_diff(now, lt if lt != -1 else now) / 1000.0))
+	
+				# If those two aren't `None`, then the Scene wants to change places with a new Scene.
+				if (not sM and not sN):
+					s.AfterUpdate(dt = (time.ticks_diff(now, lt if lt != -1 else now) / 1000.0))
+				else: # change scene.
+					m, n, a = sM, sN, s.Destroy() # scene.Destroy can return a dict with data
+	
+				lt = now
 	except KeyboardInterrupt as e:
 		global pAC
 
@@ -98,7 +81,6 @@ def UncaughtExceptionHandler():
 			pAC = True
 		elif (pAC):
 			return
-
 
 		UncaughtExceptionHandler()
 
@@ -117,7 +99,7 @@ def StartEngine():
 		return True
 	except Exception as e:
 		# this doesn't go through the ExceptionPrinter to have two different systems for printing exceptions
-		print("ERROR: Could NOT load the first scene!: ")
+		print("ERROR: Could NOT load the first scene!")
 		return False
 
 
