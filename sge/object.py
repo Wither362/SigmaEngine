@@ -72,7 +72,7 @@ class CObj:
 		Take it in mind.
 	'''
 
-	s: int = C
+	s: int = const(C)
 	'''
 	Shorter for `shape`.
 	- `0` = circle
@@ -107,7 +107,7 @@ class RObj:
 		Take it in mind.
 	'''
 
-	s: int = R
+	s: int = const(R)
 	'''
 	Shorter for `shape`.
 	- `0` = circle
@@ -144,7 +144,7 @@ class PObj:
 		Take it in mind.
 	'''
 
-	s: int = P
+	s: int = const(P)
 	'''
 	Shorter for `shape`.
 	- `0` = circle

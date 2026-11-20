@@ -1,7 +1,7 @@
-from sge.scene import Scene
+from sge.scene import Scene, R
 from sge.object import RObj, CObj
 from sge.object_helper import Rect, Circ
-import gint, math
+import gint
 import random as r
 
 
@@ -13,8 +13,6 @@ class FirstScene(Scene):
 			In case you want to do something before SigmaEngine calls Update().
 			Idk what could you do, but however you like.
 		'''
-		self.rectangles: list[object] = []
-		self.rectanglesD: list[list[int]] = []
 
 		for _ in range(50):
 			rect = RObj() # Create a rectangle
@@ -22,14 +20,10 @@ class FirstScene(Scene):
 			rect = Rect(rect, 50 * r.uniform(0.3, 2), 50 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), 40 * r.uniform(0.3, 2), gint.C_RGB(r.randint(10, 31), r.randint(10, 31), r.randint(10, 31)), zL = 1) # you may delete the zL parameter if you don't care about layers and just want it to work.
 			# if not, you would have to do this:
 			# self.big_rectangle.x, self.big_rectangle.y, self.big_rectangle.width, self.big_rectangle.height = 50, 50, 70, 70 # Adjust position and size
-			# self.big_rectangle.innerColor = gint.C_BLUE # Adjust color
+			# self.big_rectangle.innerColor = gint.C_BLUE # to adjust color
+			rect.dx = r.uniform(1, -1) # short for "X direction"
+			rect.dy = r.uniform(1, -1) # short for "Y direction"
 			self.Add(rect) # Add to this scene.
-
-			xD = r.uniform(1, -1) # short for "X direction"
-			yD = r.uniform(1, -1) # short for "Y direction"
-
-			self.rectangles.append(rect) # (the whole for i loop is completely optional, btw)
-			self.rectanglesD.append([xD, yD])
 
 		self.circle = CObj()
 		self.circle = Circ(self.circle, gint.DWIDTH - 20, 170, 35, gint.C_RGB(12, 3, 11), gint.C_RGB(7, 2, 6))
@@ -53,19 +47,21 @@ class FirstScene(Scene):
 		self.t += dt
 
 		# Take in count: ONE single object makes it so dt is around 0.016 and 0.043 seconds.
-		for i in range(len(self.rectangles)):
-			self.rectangles[i].x += dt * 12 * self.rectanglesD[i][0]
-			self.rectangles[i].y += dt * 12 * self.rectanglesD[i][1]
-
-			if ((self.rectangles[i].x - self.rectangles[i].hW < 0 and self.rectanglesD[i][0] < 0) or (self.rectangles[i].x + self.rectangles[i].hW > gint.DWIDTH and self.rectanglesD[i][0] < 1)):
-				self.rectanglesD[i][0] = -self.rectanglesD[i][0]
-	
-			if ((self.rectangles[i].y - self.rectangles[i].hH < 0 and self.rectanglesD[i][1] < 0) or (self.rectangles[i].y + self.rectangles[i].hH > gint.DHEIGHT and self.rectanglesD[i][1] > 0)):
-				self.rectanglesD[i][1] = -self.rectanglesD[i][1]
+		for o in self.objs:
+			if o.s != R: continue # Skip non-rectangles
+			
+			o.x += dt * 12 * o.dx
+			o.y += dt * 12 * o.dy
+			
+			# Bounce logic
+			if o.x < o.hW or o.x > gint.DWIDTH - o.hW:
+				o.dx *= -1
+			if o.y < o.hH or o.y > gint.DHEIGHT - o.hH:
+				o.dy *= -1
 
 		self.circle.x += dt * self.cXD * 12
 		self.circle.y += dt * self.cYD * 12
-		self.circle.r = abs(math.cos(self.t / 2)) * 35
+		self.circle.r = (self.t % 4) * 8.75 # cos() implementation
 
 		if (self.circle.r <= 17.5):
 			if (self.circle.zL != 4): # only execute SortObjects ONCE, NOT EVERY FRAME
@@ -89,6 +85,6 @@ class FirstScene(Scene):
 			self.cYD = -1
 
 		if (self.t > 10):
-			del(self.rectangles, self.rectanglesD)
+			self.objs.clear()
 			return super().Update(sMN= 'example2', sN='Example2', dt = dt)
 		return super().Update(dt = dt) # we could return sMN = 'scene2_file' and sN = 'Scene2' if we wanted to change the scene to Scene2 which is supposely inside scene2.py.

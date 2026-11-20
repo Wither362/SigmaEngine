@@ -7,6 +7,9 @@ from sge.object import Obj, on_screen, R, C, C
 from sge.camera import Camera
 from gint import dupdate, dtext, drect_border, dcircle, C_WHITE
 
+def _getZ(o):
+	return getattr(o, 'zL', 0)
+
 class Scene:
 	'''
 		Sigma Engine's main component of everything.
@@ -31,21 +34,21 @@ class Scene:
 			**Params**:
 			- `args`: optional arguments in form of a `dict` that get defined when changing scene, for transferring data and such.
 		'''
+		self.__fps = bytearray(b"FPS     ")
 
 	def Draw(self, dt: float):
 		'''
 			Draws the objects on screen.
 		'''
 
-		if (len(self.objs) >= 0):
-			for o in self.objs:
-				if (not on_screen(o)):
-					continue
+		for o in self.objs:
+			if (not on_screen(o)):
+				continue
 
-				if (o.s == C):
-					dcircle(int(o.x), int(o.y), int(o.r), o.iC, o.bC)
-				elif (o.s == R):
-					drect_border(int(o.x - o.hW), int(o.y - o.hH), int(o.x + o.hW), int(o.y + o.hH), o.iC, o.bS, o.bC)
+			if (o.s == C):
+				dcircle(int(o.x), int(o.y), int(o.r), o.iC, o.bC)
+			elif (o.s == R):
+				drect_border(int(o.x - o.hW), int(o.y - o.hH), int(o.x + o.hW), int(o.y + o.hH), o.iC, o.bS, o.bC)
 
 
 		# Add a little text at the top left corcer of the screen
@@ -104,6 +107,14 @@ class Scene:
 		'''
 		return args
 
+	def Pause(self):
+		'''Called when the user/player pressed the `AC` key, to pause the execution.'''
+
+	def Resume(self):
+		'''Called just after the user/player pressed the `AC` key, to resume the execution.'''
+
+
+
 	def SortObjects(self):
 		'''
 			Sorts its objects by their `zL` attribute.
@@ -112,7 +123,7 @@ class Scene:
 			as the code needs to go through all of the scene.objects and then sort them according to their `zL` attribute
 			(which will be `0` in case that attribute doesn't exist.)
 		'''
-		self.objs = sorted(self.objs, key = lambda o: o.zL if hasattr(o, 'zL') else 0)
+		self.objs.sort(key = _getZ)
 
 	def Add(self, o):
 		'''

@@ -27,6 +27,7 @@ fM: str = ''
 
 
 pAC: bool = None
+'''Acronym for `pressed_AC`'''
 
 
 def ChangeScene(sMN: str, sN: str):
@@ -37,7 +38,7 @@ def ChangeScene(sMN: str, sN: str):
 	return getattr(__import__('scenes.' + sMN, None, None, [sN], 0), sN)
 
 
-def UncaughtExceptionHandler():
+def UncaughtExceptionHandler(s: Scene = None):
 	'''
 		Simple yet half-effective Uncaught Exception Handler.
 		In case of the user presses the AC key without knowing or unconsciously.
@@ -49,8 +50,11 @@ def UncaughtExceptionHandler():
 
 		while True: # Main load, update and destroy code.
 			# load the scene.
-			s: Scene = ChangeScene(m, n)()
-			s.Load(a)
+			if (s == None):
+				s = ChangeScene(m, n)()
+				s.Load(a)
+			else:
+				s.Resume()
 	
 			lt: int = -1
 			now: int
@@ -70,10 +74,14 @@ def UncaughtExceptionHandler():
 					s.AfterUpdate(dt = (time.ticks_diff(now, lt if lt != -1 else now) / 1000.0))
 				else: # change scene.
 					m, n, a = sM, sN, s.Destroy() # scene.Destroy can return a dict with data
+					s.objs.clear()
+					s = None
+					break
 	
 				lt = now
 	except KeyboardInterrupt as e:
 		global pAC
+		s.Pause()
 
 		if (pAC == None):
 			pAC = False
@@ -82,7 +90,7 @@ def UncaughtExceptionHandler():
 		elif (pAC):
 			return
 
-		UncaughtExceptionHandler()
+		UncaughtExceptionHandler(s)
 
 	except Exception as e: # All the other exceptions
 		print('---UNCAUGHT EXCEPTION HANDLER ERROR---')

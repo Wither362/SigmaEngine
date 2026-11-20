@@ -26,4 +26,6 @@ def mainExecution():
 						pygame.display.set_caption(lastTitle)
 						time.__end_paused_ticks__()
 						break
+			elif event.key == pygame.K_F5:
+				raise KeyboardInterrupt
 			# elif event.key == ...

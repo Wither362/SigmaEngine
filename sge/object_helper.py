@@ -3,13 +3,13 @@
 '''
 from sge.object import Obj
 
-def Rect(o: Obj, x: float, y: float, w: float, h: float, c, zL: int = 0):
+def Rect(o: Obj, x: float, y: float, w: float, h: float, c, zL: int = None):
 	'''
 		Sets the shape of the object `o` as a rectangle and sets its attributes.
 		It's a great way to not forget want attributes you have to specify in order for SGE to work properly.
 	'''
 	o.s, o.x, o.y, o.hW, o.hH, o.iC = 1, x, y, w / 2, h / 2, c
-	if (zL != 0):
+	if (zL != None):
 		o.zL = zL
 	return o
 
