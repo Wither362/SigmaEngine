@@ -17,7 +17,6 @@ if (sys.platform != 'linux' and sys.platform != 'darwin' and sys.platform != 'wi
 if (sys.platform == 'linux' or sys.platform == 'darwin' or sys.platform == 'win32'):
 	from desktop.desktop_file_system import open
 	import desktop.desktop_time as time
-	import desktop.desktop_py_events as pyevents
 
 fM: str = ''
 '''
@@ -62,10 +61,7 @@ def UncaughtExceptionHandler(s: Scene = None):
 			# UPDATE indefinitely the scene. (This is the MAIN LOOP)
 			while True:
 				now = time.ticks_ms()
-	
-				# THIS IS MEANT TO BE DELETED WHEN TRANSFERING TO MICROPYTHON.
-				pyevents.mainExecution()
-	
+
 				# send `dt` as deltaTime. You should already now what deltatime is.
 				sM, sN = s.Update(dt = (time.ticks_diff(now, lt if lt != -1 else now) / 1000.0))
 	

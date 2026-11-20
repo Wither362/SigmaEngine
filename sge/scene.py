@@ -34,11 +34,10 @@ class Scene:
 			**Params**:
 			- `args`: optional arguments in form of a `dict` that get defined when changing scene, for transferring data and such.
 		'''
-		self.__fps = bytearray(b"FPS     ")
 
 	def Draw(self, dt: float):
 		'''
-			Draws the objects on screen.
+			Draws the objects on screen. Automatically called in `super().Update()`
 		'''
 
 		for o in self.objs:

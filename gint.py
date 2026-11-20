@@ -1,3 +1,4 @@
+import desktop.desktop_time as desktop_time
 import time
 import pygame
 from pygame.locals import *
@@ -27,6 +28,7 @@ C_INVERT = -2
 DTEXT_LEFT = 'left'
 DTEXT_CENTER = 'center'
 DTEXT_RIGHT = 'right'
+
 DTEXT_TOP = 'top'
 DTEXT_MIDDLE = 'middle'
 DTEXT_BOTTOM = 'bottom'
@@ -37,7 +39,7 @@ screen = pygame.display.set_mode((DWIDTH, DHEIGHT))
 pygame.display.set_caption("ClassPad")
 vram = pygame.Surface((DWIDTH, DHEIGHT))
 clock = pygame.time.Clock()
-FPS = 30  # Adjust to control game speed
+FPS = 50  # Adjust to control game speed
 
 # --- NEW: Window Clipping State ---
 _dwindow = (0, 0, DWIDTH, DHEIGHT)
@@ -776,6 +778,25 @@ def pollevent() -> KeyEvent:
 		return KeyEvent(KEYEV_DOWN, KEY_EXIT)
 
 	elif event.type == KEYDOWN:
+		# pause main execution. ONLY ON WIN32 SGE VERSION
+		if event.key == K_F2:
+			lastTitle = pygame.display.get_caption()[0]
+			pygame.display.set_caption('PAUSED')
+			desktop_time.__start_paused_ticks__()
+			while True:
+				ev = pygame.event.wait()
+				# completely exit execution
+				if ev.type == QUIT:
+					pygame.quit()
+					sys.exit()
+				# resume execution
+				elif ev.type == KEYDOWN and ev.key == pygame.K_F2:
+					pygame.display.set_caption(lastTitle)
+					desktop_time.__end_paused_ticks__()
+					break
+		elif event.key == K_F5:
+			raise KeyboardInterrupt
+
 		gint_key = _key_mapping.get(event.key)
 		if gint_key is not None:
 			# Only report a DOWN event if it's a new press
@@ -793,7 +814,6 @@ def pollevent() -> KeyEvent:
 				_state_flips.add(gint_key)
 				return KeyEvent(KEYEV_UP, gint_key)
 	
-	# If we reach here, it's an event we don't care about or a repeat keydown
 	return KeyEvent(KEYEV_NONE)
 
 def clearevents():
@@ -1198,7 +1218,7 @@ def _init_memory_tracker():
 def _get_process_memory():
 	"""Get current process memory usage as fallback"""
 	try:
-		import psutil
+		import psutil # type: ignore
 		process = psutil.Process(os.getpid())
 		return process.memory_info().rss
 	except ImportError:
