@@ -51,7 +51,7 @@ class FirstScene(Scene):
 		if (self.lifes <= 0):
 			self.objs.clear()
 			gint.dclear(gint.C_RED)
-			gint.dtext_opt(gint.DWIDTH // 2, gint.DHEIGHT // 2, gint.C_WHITE, gint.C_NONE, gint.DTEXT_CENTER, gint.DTEXT_MIDDLE, "DEATH.")
+			gint.dtext_opt(gint.DWIDTH // 2, gint.DHEIGHT // 2, gint.C_WHITE, gint.C_NONE, gint.DTEXT_CENTER, gint.DTEXT_MIDDLE, "DEATH.", -1)
 
 	def Update(self, dt):
 		if self.lifes <= 0:
@@ -91,7 +91,7 @@ class FirstScene(Scene):
 		if (self.player.x <= 0):
 			self.objs.clear()
 			gint.dclear(gint.C_GREEN)
-			gint.dtext_opt(gint.DWIDTH // 2, gint.DHEIGHT // 2, gint.C_DARK, gint.C_NONE, gint.DTEXT_CENTER, gint.DTEXT_MIDDLE, "YOU WON!")
+			gint.dtext_opt(gint.DWIDTH // 2, gint.DHEIGHT // 2, gint.C_DARK, gint.C_NONE, gint.DTEXT_CENTER, gint.DTEXT_MIDDLE, "YOU WON!", -1)
 			self.WIN = True
 
 		return super().Update(dt = dt)
