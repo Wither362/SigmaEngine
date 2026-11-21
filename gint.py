@@ -375,8 +375,7 @@ def drsize(text: str, font: Optional[GintFont], width: int) -> Tuple[int, int]:
 
 
 # Updated text rendering with precise spacing
-def dtext(x: int, y: int, color: int, text: str,
-		  align=DTEXT_LEFT, valign=DTEXT_TOP):
+def dtext(x: int, y: int, color: int, text: str):
 	if color == C_NONE or not text:
 		return
 	
@@ -387,19 +386,7 @@ def dtext(x: int, y: int, color: int, text: str,
 	# total_width = sum(widths)
 	# total_height = GLYPH_HEIGHT
 	total_width, total_height = dsize(text, font)
-	
-	# Horizontal alignment
-	if align == DTEXT_CENTER:
-		x -= total_width // 2
-	elif align == DTEXT_RIGHT:
-		x -= total_width
-	
-	# Vertical alignment
-	if valign == DTEXT_MIDDLE:
-		y -= total_height // 2
-	elif valign == DTEXT_BOTTOM:
-		y -= total_height
-	
+		
 	# Draw each character
 	cursor_x = x
 	for char in text:
