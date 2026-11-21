@@ -1,4 +1,4 @@
-name: Build MicroPython Distribution
+name: Build SigmaEngine dev build
 
 on:
   push:
@@ -14,10 +14,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Copy root and subfolder files into dist/ while excluding unneeded items (cpython shit and more)
+      # Copy root and subfolder files into sigma/ while excluding unneeded items (cpython shit and more)
       - name: Stage build files
         run: |
-          mkdir -p dist
+          mkdir -p sigma
           rsync -a \
             --exclude='.git/' \
             --exclude='__pycache__/' \
@@ -26,19 +26,19 @@ jobs:
             --exclude='.gitattributes' \
             --exclude='.typings/' \
             --exclude='.vscode/' \
-            --exclude='dist/' \
+            --exclude='sigma/' \
             --exclude='docs/' \
             --exclude='docs.md' \
             --exclude='desktop/' \
             --exclude='README.md' \
             --exclude='gint.py' \
-            . dist/
+            . sigma/
 
       # Delete # NON_MICROPYTHON # END code and unwrap 
       # Strip # NON_MICROPYTHON blocks and unwrap if (in_micropython) blocks
       - name: Clean Repository files for MicroPython use
         run: |
-          find dist/ -type f -name "*.py" | while read -r file; do
+          find sigma/ -type f -name "*.py" | while read -r file; do
             # Remove # NON_MICROPYTHON ... # END blocks
             sed -i '/^[[:space:]]*# NON_MICROPYTHON[[:space:]]*$/,/^[[:space:]]*# END[[:space:]]*$/d' "$file"
 
@@ -69,9 +69,9 @@ jobs:
               { print $0 }
             ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
           done
-      # Upload the cleaned dist/ folder as a build artifact
+      # Upload the cleaned sigma/ folder as a build artifact
       - name: Package build output
         uses: actions/upload-artifact@v4
         with:
-          name: micropython-build
-          path: dist/
+          name: sigmaengine-dev-build
+          path: sigma/

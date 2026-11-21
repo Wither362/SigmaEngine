@@ -6,8 +6,7 @@ import sys
 from io import StringIO
 
 # NON_MICROPYTHON
-if (sys.platform == 'linux' or sys.platform == 'darwin' or sys.platform == 'win32'):
-	from desktop.desktop_file_system import open
+from desktop.desktop_file_system import open
 # END
 
 def ExceptionPrinter(e):
@@ -15,7 +14,6 @@ def ExceptionPrinter(e):
 	sys.print_exception(e, s)
 	print(str(s.getvalue()))
 	del(s)
-
 
 def save(d: dict):
 	'''
@@ -45,4 +43,3 @@ def load():
 		print('ERROR: Error loading saved data:')
 		ExceptionPrinter(e)
 	return None
-

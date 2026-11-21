@@ -55,3 +55,7 @@ For example:
 
 - Ability to **pause** the `main update loop` by pressing `F2` (only if your code is using `pollevent()`, btw)
 - A faster execution (which is indeed reaaally bad for developing projects)
+
+## Limitations
+
+Check out [SGE Limitations.md](SGE%20Limitations.md) for information about the limitations of a fx-CG50 and SGE.
