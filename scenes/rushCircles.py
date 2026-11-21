@@ -46,17 +46,19 @@ class FirstScene(Scene):
 		self.player.iC = gint.C_DARK
 		self.player.bC = gint.C_LIGHT
 		self.lifes -= 1
-
-	def Update(self, dt):
 		if (self.lifes <= 0):
 			self.objs.clear()
 			gint.dclear(gint.C_RED)
 			gint.dtext(gint.DWIDTH // 2, gint.DHEIGHT // 2, gint.C_WHITE, "DEATH.", gint.DTEXT_CENTER, gint.DTEXT_MIDDLE)
+
+	def Update(self, dt):
+		if self.lifes <= 0:
+			if self.draw:
+				self.draw = False
 			return super().Update(dt = dt)
 		elif (self.WIN):
-			self.objs.clear()
-			gint.dclear(gint.C_GREEN)
-			gint.dtext(gint.DWIDTH // 2, gint.DHEIGHT // 2, gint.C_DARK, "YOU WON!", gint.DTEXT_CENTER, gint.DTEXT_MIDDLE)
+			if self.draw:
+				self.draw = False
 			return super().Update(dt = dt)
 
 		gint.dclear(gint.C_BLACK)
@@ -85,14 +87,19 @@ class FirstScene(Scene):
 					o.x = LVL_LATE_X
 
 		if (self.player.x <= 0):
+			self.objs.clear()
+			gint.dclear(gint.C_GREEN)
+			gint.dtext(gint.DWIDTH // 2, gint.DHEIGHT // 2, gint.C_DARK, "YOU WON!", gint.DTEXT_CENTER, gint.DTEXT_MIDDLE)
 			self.WIN = True
 
 		return super().Update(dt = dt)
 
 	def AfterUpdate(self, dt: float):
-		if (self.lifes <= 0 or self.WIN):
-			return super().AfterUpdate(dt = dt)
 		gint.pollevent()
+		if (self.lifes <= 0 or self.WIN and not self.draw):
+			gint.getkey()
+
+			return super().AfterUpdate(dt = dt)
 
 		if gint.keydown(gint.KEY_RIGHT):
 			self.dx = PLAYER_SPEED_X
