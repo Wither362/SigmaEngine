@@ -402,7 +402,7 @@ def dtext(x: int, y: int, color: int, text: str):
 
 
 def dtext_opt(x: int, y: int, fg: int, bg: int, 
-			halign: str, valign: str, text: str, size: int = -1):
+			halign: str, valign: str, text: str, size: int): # put size in -1 and that's it.
 	if not text:
 		return
 	
