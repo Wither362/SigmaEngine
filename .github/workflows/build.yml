@@ -18,7 +18,7 @@ jobs:
       - name: Stage build files
         run: |
           mkdir -p sigma/saves/
-          touch dist/saves/.keep
+          touch sigma/saves/data.py
           rsync -a \
             --exclude='.git/' \
             --exclude='__pycache__/' \
