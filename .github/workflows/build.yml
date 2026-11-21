@@ -17,7 +17,7 @@ jobs:
       # Copy root and subfolder files into sigma/ while excluding unneeded items (cpython shit and more)
       - name: Stage build files
         run: |
-          mkdir -p sigma/saves
+          mkdir -p sigma/saves/
           touch dist/saves/.keep
           rsync -a \
             --exclude='.git/' \
