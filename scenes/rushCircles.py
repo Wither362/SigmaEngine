@@ -98,8 +98,9 @@ class FirstScene(Scene):
 
 	def AfterUpdate(self, dt: float):
 		gint.pollevent()
-		if (self.lifes <= 0 or self.WIN and not self.draw):
+		if ((self.lifes <= 0 or self.WIN) and not self.draw):
 			gint.getkey()
+			gint.dclear(gint.C_NONE)
 
 			return super().AfterUpdate(dt = dt)
 
