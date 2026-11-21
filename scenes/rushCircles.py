@@ -10,13 +10,15 @@ PLAYER_R = const(5)
 PLAYER_SPEED_X = const(68)
 PLAYER_SPEED_Y = const(40)
 PLAYER_DRAG = const(25)
-PLAYER_DRAG_INV = const(int(PLAYER_DRAG * 2.7))
+PLAYER_DRAG_INV = const(67)
 PLAYER_INV_TIMER = const(3000) # in miliseconds
-PLAYER_ICOL = const(gint.C_BLUE)
-PLAYER_BCOL = const(gint.C_DARK)
-PLAYER_LIFES = 2
+PLAYER_ICOL = const(0b00000_000000_11111) # blue
+PLAYER_BCOL = const(0x528a)
+PLAYER_LIFES = const(2)
 
-LVL_LATE_X = const(-gint.DWIDTH * 4)
+WIDTH = const(384)
+HEIGHT = const(216)
+LVL_LATE_X = const(-1536) # -WIDTH * 4
 
 
 class FirstScene(Scene):
