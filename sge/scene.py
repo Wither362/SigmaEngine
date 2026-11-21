@@ -20,6 +20,7 @@ class Scene:
 	objs: list[Obj]
 	'''objects which will be represented on screen'''
 	cam: Camera
+	draw: bool = True
 
 	def __init__(self):
 		'''
@@ -90,7 +91,8 @@ class Scene:
 				  return super().Update() # don't tell NOTHING.
 			```
 		'''
-		self.Draw(dt)
+		if self.draw:
+			self.Draw(dt)
 		return sMN, sN
 
 	def AfterUpdate(self, dt: float):
