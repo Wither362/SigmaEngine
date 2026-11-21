@@ -1,10 +1,8 @@
 __pycache__/
 *.py[cod]
-src/__pycache__
-google_docs
 *.ini
-*.gdoc
-*.gscript
-google docs clone
 .tmp.*
 saves/data.py
+.vscode/*
+
+!.vscode/launch.json

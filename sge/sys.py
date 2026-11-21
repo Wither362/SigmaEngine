@@ -5,10 +5,10 @@
 import sys
 from io import StringIO
 
-# IF NOT IN MICROPYTHON
+# NON_MICROPYTHON
 if (sys.platform == 'linux' or sys.platform == 'darwin' or sys.platform == 'win32'):
 	from desktop.desktop_file_system import open
-
+# END
 
 def ExceptionPrinter(e):
 	s = StringIO()

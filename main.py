@@ -2,21 +2,20 @@
 	main.py. The main execution of the SigmaEngine. It's composed of an uncaught exception handler, a loader, and a starter.
 '''
 
-# Normal dependencies required on both sides
 from sge.scene import Scene
 from sge.sys import ExceptionPrinter
 
 
-import sys # delete also if in micropython
+# NON_MICROPYTHON
+in_micropython = False
+from desktop.desktop_file_system import open
+import desktop.desktop_time as time
+# END
 
 # Micropython dependencies
-if (sys.platform != 'linux' and sys.platform != 'darwin' and sys.platform != 'win32'):
+if (in_micropython):
 	import time
 
-# Dependencies for Python 3.13 and all that. Delete this if in micropython.
-if (sys.platform == 'linux' or sys.platform == 'darwin' or sys.platform == 'win32'):
-	from desktop.desktop_file_system import open
-	import desktop.desktop_time as time
 
 fM: str = ''
 '''

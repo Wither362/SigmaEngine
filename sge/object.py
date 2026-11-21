@@ -10,12 +10,12 @@ R = const(1)
 P = const(2)
 
 def on_screen(obj):
-    x, y, w, h = obj.get_bbox()
-    
-    if x + w < 0 or x > DWIDTH or y + h < 0 or y > DHEIGHT:
-        return False
-    
-    return True
+	x, y, w, h = obj.get_bbox()
+	
+	if x + w < 0 or x > DWIDTH or y + h < 0 or y > DHEIGHT:
+		return False
+	
+	return True
 
 class Obj:
 	'''
@@ -62,7 +62,7 @@ class Obj:
 	def __screen__(obj, sW, sH):
 		'''
 		Returns True if the object's bounding box is at least partially on screen.
-    	Returns False if the object is completely off-screen.
+		Returns False if the object is completely off-screen.
 		'''
 
 class CObj:
